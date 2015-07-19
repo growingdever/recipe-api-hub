@@ -1,3 +1,6 @@
 # recipe-api-main
+which provides recommedation of recipe with personalized data!
 
-a [Sails](http://sailsjs.org) application
+Software Maestro 6th Project
+
+Continue.
