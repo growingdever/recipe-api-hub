@@ -1,7 +1,7 @@
 /**
- * IngredientController
+ * ResourceController
  *
- * @description :: Server-side logic for managing Ingredients
+ * @description :: Server-side logic for managing Resources
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
