@@ -2,6 +2,7 @@ var User = {
   // Enforce model schema in the case of schemaless databases
   schema: true,
 
+  //
   attributes: {
     /** @type {Object} 유저 닉네임 */
     username: {
@@ -38,10 +39,7 @@ var User = {
       defaultsTo: 0,
     },
 
-    /**
-     * 비밀번호
-     * @type {Object}
-     */
+    /** @type {Object} 비밀번호 */
     passports : {
       collection: 'Passport',
       via: 'user'
