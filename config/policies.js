@@ -25,15 +25,24 @@ module.exports.policies = {
   * access)                                                                  *
   *                                                                          *
   ***************************************************************************/
-
   '*': ['passport'],
+
+  /**
+   * [AuthController description]
+   * @type {Object}
+   */
+  AuthController: {
+    '*': ['passport'],
+    
+    bearer: ['passport', 'bearerAuth'],
+  },
 
   /**
    * [UserController description]
    * @type {Object}
    */
   UserController: {
-    me: ['passport', 'bearerAuth'],
+    '*': ['passport', 'bearerAuth'],
   },
 
   /***************************************************************************

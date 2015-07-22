@@ -32,6 +32,8 @@ function hashPassword (passport, next) {
  * the user, but not the authentication data, to and from the session.
  */
 var Passport = {
+  schema: true,
+  
   attributes: {
     // Required field: Protocol
     //
@@ -83,7 +85,34 @@ var Passport = {
      */
     validatePassword: function (password, next) {
       bcrypt.compare(password, this.password, next);
-    }
+    },
+
+    /**
+     * [getAccessToken description]
+     * @return {[type]} [description]
+     */
+    getAccessToken: function () {
+      var object = this.toObject(),
+          contains = ['accessToken'];
+
+      for (var i in object) {
+        var removed = true;
+
+        contains.some(function (attr, index) {
+          if (attr === i) {
+            removed = false;
+
+            return true;
+          }
+        });
+
+        if (removed) {
+          delete object[i];
+        }
+      }
+
+      return object;
+    },
 
   },
 

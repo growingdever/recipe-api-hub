@@ -7,7 +7,7 @@
 
 module.exports = {
 	me: function (req, res) {
-    res.ok('Authenticated');
+    res.ok(req.user);
   }
 };
 

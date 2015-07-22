@@ -15,6 +15,47 @@ var AuthController = {
   },
 
   /**
+   * [bearer description]
+   * @param  {[type]} req [description]
+   * @param  {[type]} res [description]
+   * @return {[type]}     [description]
+   */
+  getAccessToken: function (req, res) {
+   passport.callback(req, res, function (err, user, challenges, statuses) {
+      if (err) {
+        return res.serverError();
+      }
+
+      if (!user) {
+        return res.badRequest("User doesn't exist");
+      }
+
+      req.login(user, function (err) {
+        if (err) {
+          return res.serverError();
+        }
+        
+        Passport
+          .findOne({
+            protocol: 'local',
+            user: user.id,
+          })
+          .exec(function (error, passport) {
+            if (error) {
+              return res.serverError(error);
+            }
+
+            if (!passport) {
+              return res.badRequest("Passport doesn't exist");
+            }
+
+            res.ok(passport.getAccessToken());
+          });
+      });
+    });
+  },
+
+  /**
    * Render the login page
    *
    * The login form itself is just a simple HTML form:
@@ -191,7 +232,7 @@ var AuthController = {
    */
   disconnect: function (req, res) {
     passport.disconnect(req, res);
-  }
+  },
 };
 
 module.exports = AuthController;
