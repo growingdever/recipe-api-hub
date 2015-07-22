@@ -7,6 +7,14 @@
  */
 var AuthController = {
   /**
+   * [_config description]
+   * @type {Object}
+   */
+  _config: {
+    pluralize: false,
+  },
+
+  /**
    * Render the login page
    *
    * The login form itself is just a simple HTML form:
