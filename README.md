@@ -2,24 +2,23 @@
 6기 소프트웨어 마에스트로 1단계 프로젝트입니다.
 
 ## 배포된 서버
-[Heroku](https://recipe-main.herokuapp.com)
+* [Heroku](https://recipe-main.herokuapp.com)
 
-*읽기 전에* 
-1. 본문 특히 코드 블럭에서 '*/*'로 시작하는 문자열들은 대부분 URL을 의미합니다. (예: /register -> 'http://domain.something.blah/register')
-2. 이 문서에서 뭔가 잘못된 점이 발견하면, 이미 알고 있다는 뜻이시니 알아서 수정하세요.
+**읽기 전에** 
+
+1. 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다. (예: /register -> 'http://recipe-main.herokuapp.com/register' 또는 'http://localhost:1337/register')
+2. 이 문서에서 뭔가 잘못된 점을 발견하셨다면, *이미 알고 있다*는 뜻이시니 알아서 수정하세요.
 
 ## 로컬 서버 실행
 ```sh
-# 레포 다운로드
+# 레포 다운로드, Node.js 가 필요합니다.
 git clone git@github.com:soma-6th/recipe-api-main.git
 cd recipe-api-main
-
-# Node.js가 필요합니다.
 npm install
 npm start
 ```
 
-## 라우트 주소
+## API 라우트 주소
 ```sh
 # View list
 /register # 가입할 수 있습니다.
@@ -44,7 +43,7 @@ npm start
 ```
 /auth/getAccessToken?identifier={{username}}&password={{password}}
 ```
-정확한 정보를 입력한다면 아래처럼 JSON 형식으로 토큰을 받을 수 있습니다:
+정확한 정보를 입력한다면 아래처럼 JSON 형식으로 토큰을 받을 수 있습니다.
 ```
 {
   "accessToken": "HMSi47aRUmB7DeSKvmlLQpJ7nT3r/hDPfskXdAoOfeeP4ojuWDFZR3tOXylfHdI7"
@@ -83,13 +82,20 @@ Unauthorized
 
 ## Models
 * *User*: 사용자 모델
+    - `/users`
 * *Passport*: 사용자 비밀번호, 토큰
 * *Recipe*: 레시피
+    - `/recipes`
 * *Review*: 레시피 리뷰
+    - `/reviews`
 * *Feel*: 레시피 식감
+    - `/feels`
 * *Like*: 좋아요
+    - `/likes`
 * *View*: 조회 기록
+    - `/views`
 * *Resource*: 파일(이미지 등)
+    - `/resources`
 
 ## Blueprint(RESTful API)
 특정 모델에 대한 추가(Create), 조회(Find), 수정(Update), 삭제(Destroy)를 정해진 URL 형식으로 수행할 수 있습니다. 이 프로젝트는 Sails의 Blueprint 기능을 기반으로 동작합니다. [원문](http://sailsjs.org/documentation/reference/blueprint-api)을 참조하면 더 자세한 내용을 읽을 수 있습니다.
@@ -113,5 +119,11 @@ PUT '/reviews/3' # id가 3인 리뷰를 수정합니다.
 DELETE '/reviews/3' # id가 3인 리뷰를 삭제합니다.
 ```
 
-## None RESTful API
-계속...
+## ML API
+머신러닝 API 입니다.
+
+```
+/ml/recipes
+/ml/recipeBlackList
+/ml/recipeW
+```
