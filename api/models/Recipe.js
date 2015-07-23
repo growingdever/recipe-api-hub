@@ -49,7 +49,13 @@ module.exports = {
     views: {
       collection: 'View',
       via: 'recipe',
-    }
+    },
+
+    /** @type {Object} 포함 재료 */
+    ingredients: {
+      collection: 'Ingredient',
+      via: 'recipes'
+    },
   }
 };
 
