@@ -29,7 +29,7 @@ module.exports = {
 
     /** @type {Object} 리뷰 이미지 */
     image: {
-      model: 'File'
+      model: 'Resource'
     },
   }
 };

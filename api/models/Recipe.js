@@ -30,13 +30,13 @@ module.exports = {
     /** @type {Object} 레시피 썸네일 */
     reviews: {
       collection: 'Review',
-      via: 'recipes',
+      via: 'recipe',
     },
 
     /** @type {Object} 레시피가 받은 좋아요 */
     likes: {
       collection: 'Like',
-      via: 'recipes',
+      via: 'recipe',
     },
 
     /** @type {Object} 레시피가 가지는 식감 */
@@ -48,7 +48,7 @@ module.exports = {
     /** @type {Object} 조회 기록 */
     views: {
       collection: 'View',
-      via: 'recipes',
+      via: 'recipe',
     }
   }
 };
