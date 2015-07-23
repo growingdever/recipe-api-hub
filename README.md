@@ -124,6 +124,4 @@ DELETE '/reviews/3' # id가 3인 리뷰를 삭제합니다.
 
 ```
 /ml/recipes
-/ml/recipeBlackList
-/ml/recipeW
 ```
