@@ -42,8 +42,12 @@ npm start
 
 ### 토큰 받기
 ```
-/auth/getAccessToken?identifier={{username}}&password={{password}}
+POST /auth/getAccessToken
 ```
+* 파라메터
+    - identifier: 이메일 또는 유저 이름
+    - password: 유저 비밀번호
+
 정확한 정보를 입력한다면 아래처럼 JSON 형식으로 토큰을 받을 수 있습니다.
 ```
 {

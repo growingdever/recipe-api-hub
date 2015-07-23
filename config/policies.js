@@ -33,8 +33,6 @@ module.exports.policies = {
    */
   AuthController: {
     '*': ['passport'],
-    
-    bearer: ['passport', 'bearerAuth'],
   },
 
   /**
