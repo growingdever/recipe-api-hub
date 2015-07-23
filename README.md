@@ -2,7 +2,8 @@
 6기 소프트웨어 마에스트로 1단계 프로젝트입니다.
 
 ## 배포된 서버
-* [Heroku](https://recipe-main.herokuapp.com)
+클릭하면 해당 링크로 이동합니다.
+* <a href="https://recipe-main.herokuapp.com" target="_blank">[Heroku]</a>
 
 **읽기 전에** 
 
@@ -120,8 +121,10 @@ DELETE '/reviews/3' # id가 3인 리뷰를 삭제합니다.
 ```
 
 ## ML API
-머신러닝 API 입니다.
+머신러닝 API 입니다. 미구현상태입니다. 다음과 같은 형식으로 지원할 예정입니다.
 
 ```
-/ml/recipes
+/ml/recommendation/recipes  # 사용자한테 추천할 레시피 N개 리턴
+/ml/similar/recipes         # 해당 레시피와 비슷한 레시피 N개
+/ml/rank/recipes            # 레시피 N개 중 특정 사용자에게 맞춘 우선순위
 ```

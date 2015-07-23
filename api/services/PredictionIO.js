@@ -5,12 +5,11 @@
 
 var
   /** @type {Array} loaded PredictionIO apps */
-  pioApps = require('./pioApps');
+  pioApps = {};
 
 /**
  * [exports description]
  * @return {[type]} [description]
  */
-module.exports = function () {
-
-};
+module.exports = (function () {
+})();
