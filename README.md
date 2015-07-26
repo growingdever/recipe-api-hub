@@ -25,7 +25,7 @@ npm start
 /register # 웹에서 가입
 /login    # 웹에서 로그인
 
-/auth/local/register/device # API 형태 가입
+/auth/local/register # API 형태 가입
 
 # RESTful API list
 /users
