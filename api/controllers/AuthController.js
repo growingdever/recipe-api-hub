@@ -206,6 +206,7 @@ var AuthController = {
 
     passport.callback(req, res, function (err, user, challenges, statuses) {
       if (err || !user) {
+        console.log(err);
         return tryAgain(challenges);
       }
 
