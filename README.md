@@ -22,8 +22,10 @@ npm start
 ## API 라우트 주소
 ```sh
 # View list
-/register # 가입할 수 있습니다.
-/login # 로그인할 수 있습니다.
+/register # 웹에서 가입
+/login    # 웹에서 로그인
+
+/auth/local/register/device # API 형태 가입
 
 # RESTful API list
 /users
@@ -33,9 +35,66 @@ npm start
 /feels
 
 # Additional API
-/auth/getAccessToken # 자세한 설명은 생략한다
-/users/me # 인증한 '나' 정보를 받는다.
+/auth/getAccessToken  # 자세한 설명은 생략한다
+/users/me             # 인증한 '나' 정보를 받는다.
 ```
+
+### API attributes
+패키지의 `/api/models/*.js` 위치에 모델의 인터페이스가 나와있습니다. 아래는 User.js 파일 예시입니다.
+```
+var User = {
+  // Enforce model schema in the case of schemaless databases
+  schema: true,
+
+  //
+  attributes: {
+    /** @type {Object} 유저 닉네임 */
+    username: {
+      type: 'string',
+      unique: true,
+      minLength: 2,
+    },
+
+    /** @type {Object} 유저 이메일 */
+    email: {
+      type: 'email',
+      unique: true,
+      required: true,
+    },
+
+    /** @type {Object} 유저 나이 */
+    age: {
+      type: 'integer',
+      min: 1, max: 150,
+      defaultsTo: 20,
+    },
+
+    /**
+     * 유저 성별
+     * 0: 등록 안됨
+     * 1: 남자
+     * 2: 여자
+     * 3: 모름
+     * 
+     * @type {Object}
+     */
+    gender: {
+      type: 'integer',
+      min: 0, max: 3,
+      defaultsTo: 0,
+    },
+
+    /** @type {Object} 비밀번호 */
+    passports : {
+      collection: 'Passport',
+      via: 'user'
+    }
+  }
+};
+
+module.exports = User;
+```
+attributes 의 항목은 모델의 속성을 의미합니다. 여기에 대한 해석이 필요하다면 [Waterline](https://github.com/balderdashy/waterline#collection) 을 참고하세요.
 
 ## 인증
 인증하기 위해 bearer 방법을 사용합니다. 토큰 방식을 사용하면 자격 확인을 위해 매번 유저 아이디와 비밀번호를 전송할 필요가 없습니다.

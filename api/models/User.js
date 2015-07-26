@@ -14,6 +14,7 @@ var User = {
     /** @type {Object} 유저 이메일 */
     email: {
       type: 'email',
+      required: true,
       unique: true,
     },
 
