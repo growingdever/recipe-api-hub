@@ -41,7 +41,7 @@ npm start
 
 ### API attributes
 패키지의 `/api/models/*.js` 위치에 모델의 인터페이스가 나와있습니다. 아래는 User.js 파일 예시입니다.
-```
+```js
 var User = {
   // Enforce model schema in the case of schemaless databases
   schema: true,
