@@ -39,7 +39,7 @@ npm start
 /users/me             # 인증한 '나' 정보를 받는다.
 ```
 
-### Auth API Response
+### Handle Auth API BadRequest
 Auth API는 기본적으로 작업에 실패하면 다른 웹페이지로 리다이렉트합니다. 만약 당신이 외부 기기에서 요청해서 리다이렉트 대신 정확한 에러 메세지를 받고 싶다면 파라메터에 device를 추가하고 기기의 이름을 넣어주세요. (예: device=android)
 ```js
 // Error List
