@@ -180,6 +180,8 @@ var AuthController = {
       // We do return a generic error and the original request body.
       var flashError = req.flash('error')[0];
 
+      sails.log(flashError);
+
       if (err && !flashError ) {
         req.flash('error', 'Error.Passport.Generic');
       } else if (flashError) {
@@ -190,11 +192,20 @@ var AuthController = {
       // If an error was thrown, redirect the user to the
       // login, register or disconnect action initiator view.
       // These views should take care of rendering the error messages.
-      var action = req.param('action');
+      var
+        action = req.param('action'),
+        device = req.param('device');
 
       switch (action) {
         case 'register':
-          res.redirect('/register');
+          if (device) {
+            res.badRequest({
+              error: req.flash('error')[0]
+            });
+          }
+          else {
+            res.redirect('/register'); 
+          }
           break;
         case 'disconnect':
           res.redirect('back');
