@@ -194,18 +194,18 @@ var AuthController = {
       // These views should take care of rendering the error messages.
       var
         action = req.param('action'),
-        device = req.param('device');
+        device = req.param('device'),
+        through = req.param('through');
+      
+      if (device) {
+        res.badRequest({
+          error: req.flash('error')[0]
+        });
+      }
 
       switch (action) {
         case 'register':
-          if (device) {
-            res.badRequest({
-              error: req.flash('error')[0]
-            });
-          }
-          else {
-            res.redirect('/register'); 
-          }
+          res.redirect('/register'); 
           break;
         case 'disconnect':
           res.redirect('back');

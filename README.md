@@ -39,6 +39,31 @@ npm start
 /users/me             # 인증한 '나' 정보를 받는다.
 ```
 
+### Auth API Response
+Auth API는 기본적으로 작업에 실패하면 다른 웹페이지로 리다이렉트합니다. 만약 당신이 외부 기기에서 요청해서 리다이렉트 대신 정확한 에러 메세지를 받고 싶다면 파라메터에 device를 추가하고 기기의 이름을 넣어주세요. (예: device=android)
+```js
+// Error List
+{
+  "Error.Passport.Password.Invalid": "패스워드 형식좀 ㅡㅡ",
+  "Error.Passport.Password.Wrong": "패스워드가 달라!",
+  "Error.Passport.Password.NotSet": "패스워드 안넘겼어",
+  "Error.Passport.Username.NotFound": "네 이름으로 된 사람 없는데?",
+  "Error.Passport.User.Exists": "네 이름 중복됬어",
+  "Error.Passport.Email.NotFound": "그런 이메일 없는데?",
+  "Error.Passport.Email.Missing": "이메일 내놔라",
+  "Error.Passport.Email.Exists": "이메일 중복 ㅡ.",
+  "Error.Passport.Username.Missing": "이름 내놔 ㅡ",
+  "Error.Passport.Password.Missing": "너 왜 비번이 없냐!",
+  "Error.Passport.Generic": "패스포트에 이상한게 들어갔어.."
+}
+
+// 이런 결과로 나올 것입니다.
+// HTTP Status Code: 400
+{
+  error: "Error.Passport.Password.Invalid"
+}
+```
+
 ### API attributes
 패키지의 `/api/models/*.js` 위치에 모델의 인터페이스가 나와있습니다. 아래는 User.js 파일 예시입니다.
 ```js
