@@ -58,7 +58,6 @@ Auth API는 기본적으로 작업에 실패하면 다른 웹페이지로 리다
 }
 
 // 이런 결과로 나올 것입니다.
-// HTTP Status Code: 400
 {
   error: "Error.Passport.Password.Invalid"
 }

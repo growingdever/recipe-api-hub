@@ -198,7 +198,7 @@ var AuthController = {
         through = req.param('through');
       
       if (device) {
-        return res.badRequest({
+        return res.ok({
           error: req.flash('error')[0]
         });
       }
