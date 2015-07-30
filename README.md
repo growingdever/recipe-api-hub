@@ -52,6 +52,8 @@ Auth API는 기본적으로 작업에 실패하면 다른 웹페이지로 리다
   "Error.Passport.Email.NotFound": "그런 이메일 없는데?",
   "Error.Passport.Email.Missing": "이메일 내놔라",
   "Error.Passport.Email.Exists": "이메일 중복 ㅡ.",
+  "Error.Passport.Email.Invalid": "메일 형식이 이상함 ㅡ.",
+  "Error.Passport.Email.Unknown": "알 수 없는 메일 에러.",
   "Error.Passport.Username.Missing": "이름 내놔 ㅡ",
   "Error.Passport.Password.Missing": "너 왜 비번이 없냐!",
   "Error.Passport.Generic": "패스포트에 이상한게 들어갔어.."

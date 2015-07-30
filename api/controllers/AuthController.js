@@ -194,8 +194,7 @@ var AuthController = {
       // These views should take care of rendering the error messages.
       var
         action = req.param('action'),
-        device = req.param('device'),
-        through = req.param('through');
+        device = req.param('device');
       
       if (device) {
         return res.badRequest({
@@ -217,7 +216,6 @@ var AuthController = {
 
     passport.callback(req, res, function (err, user, challenges, statuses) {
       if (err || !user) {
-        console.log(err);
         return tryAgain(challenges);
       }
 
