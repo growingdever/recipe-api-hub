@@ -3,20 +3,51 @@
 
 ## 배포된 서버
 클릭하면 해당 링크로 이동합니다.
-- [Heroku](https://recipe-main.herokuapp.com)
+
+- <a href="https://recipe-main.herokuapp.com" target="_blank">Heroku</a>
 
 **읽기 전에**
-- 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다.
-- (예: /register -> '[http://recipe-main.herokuapp.com/register](http://recipe-main.herokuapp.com/register)' 또는 '[http://localhost:1337/register](http://localhost:1337/register)')
-- 이 문서에서 뭔가 잘못된 점을 발견하셨다면, 너는 이미 이미 알고 있다*는 뜻이니 알아서 수정하세요.
+1. 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다. (예를 들어`/register`는 다음과 같습니다. `http://recipe-main.herokuapp.com/register` 또는 `http://localhost:1337/register`)
+2. 이 문서에서 뭔가 잘못된 점을 발견하셨다면, *이미 알고 있다*는 뜻이니 알아서 수정하세요.
 
 ## 로컬 서버 실행
 
 ```sh
-# 레포 다운로드, Node.js 가 필요합니다.
+# 레포 다운로드
 git clone git@github.com:soma-6th/recipe-api-main.git
 cd recipe-api-main
-npm install       # 의존성 설치
+
+# install dependencies
+npm install
+```
+
+환경변수를 지정하지 않은 경우 다음의 
+
+```sh
+# DB Connection
+vi ./config/local.js
+```
+
+```js
+// config/local.js
+// 다음과 같은 내용을 추가합니다.
+module.exports = {
+  connections: {
+    coreDB: {
+      adapter: 'such as sails-mongo, sails-postgres, etc.',
+      port: 27017,
+      host: 'such as localhost',
+      user: 'such as root',
+      password: 'such as blahblah',
+      database: 'such as something'
+    },
+  },
+};
+
+```
+
+```sh
+# 서버 실행
 npm start
 ```
 
@@ -125,10 +156,10 @@ var User = {
 module.exports = User;
 ```
 
-attributes 의 항목은 모델의 속성을 의미합니다. 여기에 대한 해석이 필요하다면 [Waterline](https://github.com/balderdashy/waterline#collection) 을 참고하세요.
+attributes 의 항목은 모델의 속성을 의미합니다. 여기에 대한 추가적인 정보가 필요하다면 [Waterline](https://github.com/balderdashy/waterline#collection) 을 참고하세요.
 
 ## 인증
-인증하기 위해 bearer 방법을 사용합니다. 토큰 방식을 사용하면 자격 확인을 위해 매번 유저 아이디와 비밀번호를 전송할 필요가 없습니다.
+인증하기 위해 Bearer 방법을 사용합니다. 토큰 방식을 사용하면 자격 확인을 위해 매번 유저 아이디와 비밀번호를 전송할 필요가 없습니다.
 
 ### 토큰 받기
 

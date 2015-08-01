@@ -18,7 +18,7 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'somaPostgresqlServer',
+    connection: 'coreDB',
     migrate: 'safe',
   },
 

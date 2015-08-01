@@ -19,7 +19,13 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.connections.html
  */
 
+var env = process.env;
+
 module.exports.connections = {
+  coreDB: {
+    adapter: env.DB_ADAPTER,
+    url: env.DB_CREDENTIAL,
+  },
 
   /***************************************************************************
   *                                                                          *
@@ -56,14 +62,6 @@ module.exports.connections = {
   * Run: npm install sails-mongo                                             *
   *                                                                          *
   ***************************************************************************/
-  someMongodbServer: {
-    adapter: 'sails-mongo',
-    host: 'localhost',
-    port: 27017,
-    // user: 'username',
-    // password: 'password',
-    // database: 'your_mongo_db_name_here'
-  },
 
   /***************************************************************************
   *                                                                          *
@@ -76,10 +74,10 @@ module.exports.connections = {
   ***************************************************************************/
   somaPostgresqlServer: {
     adapter: 'sails-postgresql',
-    host: 'ec2-107-20-220-251.compute-1.amazonaws.com',
-    user: 'hmuhrxbeamonoe',
-    password: 'jdg_vm897xEfHRTAkKLkBbUOJV',
-    database: 'dtar743058i1r',
+    host: '',
+    user: '',
+    password: '',
+    database: '',
     pool: false,
     ssl: true,
   }

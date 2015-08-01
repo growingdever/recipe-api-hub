@@ -27,14 +27,16 @@ var AuthController = {
       }
 
       if (!user) {
-        return res.badRequest("User doesn't exist");
+        return res.ok({
+          error: 'Auth.Token.User.NotFound'
+        });
       }
 
       req.login(user, function (err) {
         if (err) {
           return res.serverError();
         }
-        
+
         Passport
           .findOne({
             protocol: 'local',
@@ -46,7 +48,9 @@ var AuthController = {
             }
 
             if (!passport) {
-              return res.badRequest("Passport doesn't exist");
+              return res.ok({
+                error: 'Auth.Token.Passport.NotFound'
+              });
             }
 
             res.ok(passport.getAccessToken());
@@ -118,10 +122,10 @@ var AuthController = {
    */
   logout: function (req, res) {
     req.logout();
-    
+
     // mark the user as logged out for auth purposes
     req.session.authenticated = false;
-    
+
     res.redirect('/');
   },
 
@@ -195,7 +199,7 @@ var AuthController = {
       var
         action = req.param('action'),
         device = req.param('device');
-      
+
       if (device) {
         return res.ok({
           error: req.flash('error')[0]
@@ -204,7 +208,7 @@ var AuthController = {
 
       switch (action) {
         case 'register':
-          res.redirect('/register'); 
+          res.redirect('/register');
           break;
         case 'disconnect':
           res.redirect('back');
@@ -223,10 +227,10 @@ var AuthController = {
         if (err) {
           return tryAgain(err);
         }
-        
+
         // Mark the session as authenticated to work with default Sails sessionAuth.js policy
         req.session.authenticated = true;
-        
+
         if (req.param('device')) {
           res.ok(user);
         }

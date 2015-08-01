@@ -12,6 +12,8 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.session.html
  */
 
+var env = process.env;
+
 module.exports.session = {
 
   /***************************************************************************
@@ -21,7 +23,7 @@ module.exports.session = {
   * of your users, forcing them to log in again.                             *
   *                                                                          *
   ***************************************************************************/
-  secret: 'b2fb0b98313f392b18b43fb63356c033',
+  secret: env.SESSION_SECRET,
 
 
   /***************************************************************************
@@ -41,7 +43,7 @@ module.exports.session = {
   * session store that can be shared across multiple Sails.js servers        *
   ***************************************************************************/
 
-  // adapter: 'redis',
+  //adapter: 'redis',
 
   /***************************************************************************
   *                                                                          *
@@ -52,11 +54,11 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  // host: 'localhost',
-  // port: 6379,
+  //host: '133.130.55.218',
+  //port: 6379,
   // ttl: <redis session TTL in seconds>,
-  // db: 0,
-  // pass: <redis auth password>,
+  //db: 0,
+  //pass: 'soma-recipe',
   // prefix: 'sess:',
 
 
@@ -67,11 +69,13 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  // adapter: 'mongo',
-  // host: 'localhost',
-  // port: 27017,
-  // db: 'sails',
-  // collection: 'sessions',
+  adapter: env.SESSION_ADAPTER,
+  url: env.SESSION_CREDENTIAL,
+
+  //host: 'localhost',
+  //port: 27017,
+  //db: 'sails',
+  //collection: 'sessions',
 
   /***************************************************************************
   *                                                                          *
