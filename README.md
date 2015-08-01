@@ -14,19 +14,14 @@
 
 ```sh
 # 레포 다운로드
-git clone git@github.com:soma-6th/recipe-api-main.git
+git clone git@github.com:soma-6th/recipe-api-hub.git
 cd recipe-api-main
 
 # install dependencies
 npm install
 ```
 
-환경변수를 지정하지 않은 경우 다음의 
-
-```sh
-# DB Connection
-vi ./config/local.js
-```
+환경변수를 지정하지 않은 경우 `/config/local.js` 파일을 만들어 추가 설정이 필요합니다.
 
 ```js
 // config/local.js
@@ -34,17 +29,19 @@ vi ./config/local.js
 module.exports = {
   connections: {
     coreDB: {
-      adapter: 'such as sails-mongo, sails-postgres, etc.',
-      port: 27017,
-      host: 'such as localhost',
-      user: 'such as root',
-      password: 'such as blahblah',
-      database: 'such as something'
+      adapter: 'something',
+      url: 'blahblah'
     },
   },
-};
 
+  session: {
+    secret: 'forget my past',
+    adapter: 'blahblah',
+    url: 'something',
+  }
+};
 ```
+저장 후 실행
 
 ```sh
 # 서버 실행
