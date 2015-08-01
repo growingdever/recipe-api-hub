@@ -6,8 +6,9 @@
 - [Heroku](https://recipe-main.herokuapp.com)
 
 **읽기 전에**
-1. 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다. (예: /register -> '[http://recipe-main.herokuapp.com/register](http://recipe-main.herokuapp.com/register)' 또는 '[http://localhost:1337/register](http://localhost:1337/register)')
-2. 이 문서에서 뭔가 잘못된 점을 발견하셨다면, **너는 이미 이미 알고 있다**는 뜻이니 알아서 수정하세요.
+- 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다.
+- (예: /register -> '[http://recipe-main.herokuapp.com/register](http://recipe-main.herokuapp.com/register)' 또는 '[http://localhost:1337/register](http://localhost:1337/register)')
+- 이 문서에서 뭔가 잘못된 점을 발견하셨다면, 너는 이미 이미 알고 있다*는 뜻이니 알아서 수정하세요.
 
 ## 로컬 서버 실행
 
