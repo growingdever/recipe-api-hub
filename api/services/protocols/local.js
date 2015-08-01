@@ -50,7 +50,9 @@ exports.register = function (req, res, next) {
     if (err) {
       if (err.code === 'E_VALIDATION') {
         if (err.invalidAttributes.email) {
-          switch (err.invalidAttributes.email.rule) {
+          sails.log(err.invalidAttributes.email[0].rule);
+          
+          switch (err.invalidAttributes.email[0].rule) {
             case 'email':
                 req.flash('error', 'Error.Passport.Email.Invalid');
               break;

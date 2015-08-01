@@ -13,12 +13,14 @@ module.exports = {
     title: {
       type: 'string',
       minLength: 4, maxLength: 255,
+      required: true,
     },
 
     /** @type {Object} 레시피 조리 방법 */
     method: {
       type: 'text',
       minLength: 10,
+      required: true,
     },
 
     /** @type {Object} 레시피 썸네일 */
@@ -27,7 +29,7 @@ module.exports = {
       required: true,
     },
 
-    /** @type {Object} 레시피 썸네일 */
+    /** @type {Object} 레시피 리뷰들 */
     reviews: {
       collection: 'Review',
       via: 'recipe',
@@ -39,23 +41,10 @@ module.exports = {
       via: 'recipe',
     },
 
-    /** @type {Object} 레시피가 가지는 식감 */
-    feels: {
-      collection: 'Feel',
-      via: 'recipes',
-    },
-
     /** @type {Object} 조회 기록 */
     views: {
       collection: 'View',
       via: 'recipe',
     },
-
-    /** @type {Object} 포함 재료 */
-    ingredients: {
-      collection: 'Ingredient',
-      via: 'recipes'
-    },
-  }
+  },
 };
-

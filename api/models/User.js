@@ -31,7 +31,7 @@ var User = {
      * 1: 남자
      * 2: 여자
      * 3: 모름
-     * 
+     *
      * @type {Object}
      */
     gender: {
@@ -45,7 +45,7 @@ var User = {
       collection: 'Passport',
       via: 'user'
     }
-  }
+  },
 };
 
 module.exports = User;

@@ -3,23 +3,24 @@
 
 ## 배포된 서버
 클릭하면 해당 링크로 이동합니다.
-* <a href="https://recipe-main.herokuapp.com" target="_blank">[Heroku]</a>
+- [Heroku](https://recipe-main.herokuapp.com)
 
-**읽기 전에** 
-
-1. 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다. (예: /register -> 'http://recipe-main.herokuapp.com/register' 또는 'http://localhost:1337/register')
-2. 이 문서에서 뭔가 잘못된 점을 발견하셨다면, *이미 알고 있다*는 뜻이시니 알아서 수정하세요.
+**읽기 전에**
+1. 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다. (예: /register -> '[http://recipe-main.herokuapp.com/register](http://recipe-main.herokuapp.com/register)' 또는 '[http://localhost:1337/register](http://localhost:1337/register)')
+2. 이 문서에서 뭔가 잘못된 점을 발견하셨다면, **너는 이미 이미 알고 있다**는 뜻이니 알아서 수정하세요.
 
 ## 로컬 서버 실행
+
 ```sh
 # 레포 다운로드, Node.js 가 필요합니다.
 git clone git@github.com:soma-6th/recipe-api-main.git
 cd recipe-api-main
-npm install
+npm install       # 의존성 설치
 npm start
 ```
 
 ## API 라우트 주소
+
 ```sh
 # View list
 /register # 웹에서 가입
@@ -41,6 +42,7 @@ npm start
 
 ### Handle Auth API BadRequest
 Auth API는 기본적으로 작업에 실패하면 다른 웹페이지로 리다이렉트합니다. 만약 당신이 외부 기기에서 요청해서 리다이렉트 대신 정확한 에러 메세지를 받고 싶다면 파라메터에 device를 추가하고 기기의 이름을 넣어주세요. (예: device=android)
+
 ```js
 // Error List
 {
@@ -67,6 +69,7 @@ Auth API는 기본적으로 작업에 실패하면 다른 웹페이지로 리다
 
 ### API attributes
 패키지의 `/api/models/*.js` 위치에 모델의 인터페이스가 나와있습니다. 아래는 User.js 파일 예시입니다.
+
 ```js
 var User = {
   // Enforce model schema in the case of schemaless databases
@@ -101,7 +104,7 @@ var User = {
      * 1: 남자
      * 2: 여자
      * 3: 모름
-     * 
+     *
      * @type {Object}
      */
     gender: {
@@ -120,28 +123,34 @@ var User = {
 
 module.exports = User;
 ```
+
 attributes 의 항목은 모델의 속성을 의미합니다. 여기에 대한 해석이 필요하다면 [Waterline](https://github.com/balderdashy/waterline#collection) 을 참고하세요.
 
 ## 인증
 인증하기 위해 bearer 방법을 사용합니다. 토큰 방식을 사용하면 자격 확인을 위해 매번 유저 아이디와 비밀번호를 전송할 필요가 없습니다.
 
 ### 토큰 받기
+
 ```
 POST /auth/getAccessToken
 ```
-* 파라메터
-    - identifier: 이메일 또는 유저 이름
-    - password: 유저 비밀번호
+
+- 파라메터
+  - identifier: 이메일 또는 유저 이름
+  - password: 유저 비밀번호
 
 정확한 정보를 입력한다면 아래처럼 JSON 형식으로 토큰을 받을 수 있습니다.
+
 ```
 {
   "accessToken": "HMSi47aRUmB7DeSKvmlLQpJ7nT3r/hDPfskXdAoOfeeP4ojuWDFZR3tOXylfHdI7"
 }
 ```
+
 토큰을 유실하면 다시 토큰을 받아야 하니 잘 저장해두세요.
 
 ### 토큰 전송
+
 ```sh
 # 더러운 방법, URL Query나 body에 토큰을 전송하는 것을 의미한다.
 /api?access_token=HMSi47aRUmB7DeSKvmlLQpJ7nT3r/hDPfskXdAoOfeeP4ojuWDFZR3tOXylfHdI7
@@ -149,10 +158,12 @@ POST /auth/getAccessToken
 # 탁월한 선택, 헤더에 토큰을 포함시킨다.
 Authorization: Bearer HMSi47aRUmB7DeSKvmlLQpJ7nT3r/hDPfskXdAoOfeeP4ojuWDFZR3tOXylfHdI7
 ```
+
 두 방법 모두 인증이 가능합니다. 하지만 더러운 방법은 100% 확률로 API 사용 과정에서 문제를 야기시킬 것입니다.
 
 ### 인증 검사
 인증이 제대로 동작하는지 알아보기 위해서 토큰을 전송해서 자신에 대한 정보를 받을 수 있는지 시도해볼 수 있습니다.
+
 ```
 대상 URL
 /users/me
@@ -171,24 +182,31 @@ Unauthorized
 ```
 
 ## Models
-* *User*: 사용자 모델
-    - `/users`
-* *Passport*: 사용자 비밀번호, 토큰
-* *Recipe*: 레시피
-    - `/recipes`
-* *Review*: 레시피 리뷰
-    - `/reviews`
-* *Feel*: 레시피 식감
-    - `/feels`
-* *Like*: 좋아요
-    - `/likes`
-* *View*: 조회 기록
-    - `/views`
-* *Resource*: 파일(이미지 등)
-    - `/resources`
+- _User_: 사용자 모델
+  - `/users`
+
+- _Passport_: 사용자 비밀번호, 토큰
+- _Recipe_: 레시피
+  - `/recipes`
+
+- _Review_: 레시피 리뷰
+  - `/reviews`
+
+- _Feel_: 레시피 식감
+  - `/feels`
+
+- _Like_: 좋아요
+  - `/likes`
+
+- _View_: 조회 기록
+  - `/views`
+
+- _Resource_: 파일(이미지 등)
+  - `/resources`
 
 ## Blueprint(RESTful API)
 특정 모델에 대한 추가(Create), 조회(Find), 수정(Update), 삭제(Destroy)를 정해진 URL 형식으로 수행할 수 있습니다. 이 프로젝트는 Sails의 Blueprint 기능을 기반으로 동작합니다. [원문](http://sailsjs.org/documentation/reference/blueprint-api)을 참조하면 더 자세한 내용을 읽을 수 있습니다.
+
 ```
 # 앞에 있는 POST, GET, PUT, DELETE는 Request Method를 의미합니다.
 # 새 리뷰 등록
