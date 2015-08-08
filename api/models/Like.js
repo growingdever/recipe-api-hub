@@ -20,5 +20,5 @@ module.exports = {
       model: 'User',
       required: true,
     },
-  }
+  },
 };

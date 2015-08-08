@@ -33,6 +33,8 @@ module.exports.policies = {
    */
   AuthController: {
     '*': ['passport'],
+
+    'me': ['passport', 'bearerAuth']
   },
 
   /**
@@ -40,6 +42,10 @@ module.exports.policies = {
    * @type {Object}
    */
   UserController: {
+    '*': ['passport'],
+  },
+
+  TestController: {
     '*': ['passport'],
   },
 

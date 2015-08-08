@@ -26,7 +26,8 @@ var crypto    = require('crypto');
 exports.register = function (req, res, next) {
   var email    = req.param('email')
     , username = req.param('username')
-    , password = req.param('password');
+    , password = req.param('password')
+    , nickname = req.param('nickname');
 
   if (!email) {
     req.flash('error', 'Error.Passport.Email.Missing');
@@ -46,12 +47,13 @@ exports.register = function (req, res, next) {
   User.create({
     username : username
   , email    : email
+  , nickname : nickname
   }, function (err, user) {
     if (err) {
       if (err.code === 'E_VALIDATION') {
         if (err.invalidAttributes.email) {
           sails.log(err.invalidAttributes.email[0].rule);
-          
+
           switch (err.invalidAttributes.email[0].rule) {
             case 'email':
                 req.flash('error', 'Error.Passport.Email.Invalid');
@@ -64,6 +66,7 @@ exports.register = function (req, res, next) {
               break;
           }
         } else {
+          sails.log(err);
           req.flash('error', 'Error.Passport.User.Exists');
         }
       }

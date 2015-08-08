@@ -19,7 +19,7 @@ function hashPassword (passport, next) {
 }
 
 function createToken() {
-  return crypto.randomBytes(48).toString('base64');
+  return crypto.randomBytes(50).toString('base64');
 }
 
 /**
@@ -139,7 +139,7 @@ var Passport = {
    */
   beforeUpdate: function (passport, next) {
     hashPassword(passport, next);
-  }
+  },
 };
 
 module.exports = Passport;

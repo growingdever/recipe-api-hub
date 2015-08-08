@@ -46,5 +46,10 @@ module.exports = {
       collection: 'View',
       via: 'recipe',
     },
+
+    attributes: { 
+      collection: 'attribute',
+      via: 'recipes',
+    }
   },
 };

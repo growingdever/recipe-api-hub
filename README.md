@@ -3,12 +3,11 @@
 
 ## 배포된 서버
 클릭하면 해당 링크로 이동합니다.
-
 - <a href="https://recipe-main.herokuapp.com" target="_blank">Heroku</a>
 
 **읽기 전에**
 1. 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다. (예를 들어`/register`는 다음과 같습니다. `http://recipe-main.herokuapp.com/register` 또는 `http://localhost:1337/register`)
-2. 이 문서에서 뭔가 잘못된 점을 발견하셨다면, *이미 알고 있다*는 뜻이니 알아서 수정하세요.
+2. 이 문서에서 뭔가 잘못된 점을 발견하셨다면, _이미 알고 있다_는 뜻이니 알아서 수정하세요.
 
 ## 로컬 서버 실행
 
@@ -30,7 +29,9 @@ module.exports = {
   connections: {
     coreDB: {
       adapter: 'something',
-      url: 'blahblah'
+      url: 'blahblah',
+      ssl: true,
+      pool: false,
     },
   },
 
@@ -41,6 +42,7 @@ module.exports = {
   }
 };
 ```
+
 저장 후 실행
 
 ```sh
@@ -58,15 +60,15 @@ npm start
 /auth/local/register # API 형태 가입
 
 # RESTful API list
-/users
-/likes
-/views
-/recipes
-/feels
+# RESTful API URL type: /{API version}/{collection name}/{id}
+/v1/users
+/v1/likes
+/v1/views
+/v1/recipes
+/v1/feels
 
 # Additional API
 /auth/getAccessToken  # 자세한 설명은 생략한다
-/users/me             # 인증한 '나' 정보를 받는다.
 ```
 
 ### Handle Auth API BadRequest
@@ -255,6 +257,10 @@ PUT '/reviews/3' # id가 3인 리뷰를 수정합니다.
 # 리뷰 삭제
 DELETE '/reviews/3' # id가 3인 리뷰를 삭제합니다.
 ```
+
+### User Model
+#### update
+유저 정보를 수정하기 위해서는
 
 ## ML API
 머신러닝 API 입니다. 미구현상태입니다. 다음과 같은 형식으로 지원할 예정입니다.
