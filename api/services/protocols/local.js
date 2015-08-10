@@ -71,7 +71,7 @@ exports.register = function (req, res, next) {
               break;
           }
         }
-        else if(error.invalidAttributes.nickname) {
+        else if(err.invalidAttributes.nickname) {
             req.flash('error', 'Error.Passport.Nickname.Invalid');
         }
         else {
