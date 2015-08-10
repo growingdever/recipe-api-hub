@@ -39,15 +39,20 @@ exports.register = function (req, res, next) {
     return next(new Error('No username was entered.'));
   }
 
+  if (!nickname) {
+    req.flash('error', 'Error.Passport.Nickname.Missing');
+    return next(new Error('No nickname was entered.'));
+  }
+
   if (!password) {
     req.flash('error', 'Error.Passport.Password.Missing');
     return next(new Error('No password was entered.'));
   }
 
   User.create({
-    username : username
-  , email    : email
-  , nickname : nickname
+    username : username,
+    email    : email,
+    nickname : nickname
   }, function (err, user) {
     if (err) {
       if (err.code === 'E_VALIDATION') {
@@ -65,9 +70,13 @@ exports.register = function (req, res, next) {
                 req.flash('error', 'Error.Passport.Email.Unknown');
               break;
           }
-        } else {
+        }
+        else if(error.invalidAttributes.nickname) {
+            req.flash('error', 'Error.Passport.Nickname.Invalid');
+        }
+        else {
           sails.log(err);
-          req.flash('error', 'Error.Passport.User.Exists');
+          req.flash('error', 'Error.Passport.Unknown');
         }
       }
 
@@ -78,10 +87,10 @@ exports.register = function (req, res, next) {
     var token = crypto.randomBytes(48).toString('base64');
 
     Passport.create({
-      protocol    : 'local'
-    , password    : password
-    , user        : user.id
-    , accessToken : token
+      protocol    : 'local',
+      password    : password,
+      user        : user.id,
+      accessToken : token
     }, function (err, passport) {
       if (err) {
         if (err.code === 'E_VALIDATION') {
@@ -110,12 +119,12 @@ exports.register = function (req, res, next) {
  * @param {Function} next
  */
 exports.connect = function (req, res, next) {
-  var user     = req.user
-    , password = req.param('password');
+  var user     = req.user,
+  spassword = req.param('password');
 
   Passport.findOne({
-    protocol : 'local'
-  , user     : user.id
+    protocol : 'local',
+    user     : user.id
   }, function (err, passport) {
     if (err) {
       return next(err);
@@ -123,8 +132,8 @@ exports.connect = function (req, res, next) {
 
     if (!passport) {
       Passport.create({
-        protocol : 'local'
-      , password : password
+        protocol : 'local',
+        password : password
       , user     : user.id
       }, function (err, passport) {
         next(err, user);
@@ -149,8 +158,8 @@ exports.connect = function (req, res, next) {
  * @param {Function} next
  */
 exports.login = function (req, identifier, password, next) {
-  var isEmail = validator.isEmail(identifier)
-    , query   = {};
+  var isEmail = validator.isEmail(identifier),
+        query   = {};
 
   if (isEmail) {
     query.email = identifier;
@@ -175,8 +184,8 @@ exports.login = function (req, identifier, password, next) {
     }
 
     Passport.findOne({
-      protocol : 'local'
-    , user     : user.id
+      protocol : 'local',
+      user     : user.id
     }, function (err, passport) {
       if (passport) {
         passport.validatePassword(password, function (err, res) {
