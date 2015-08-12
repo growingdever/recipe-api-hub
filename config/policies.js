@@ -25,7 +25,7 @@ module.exports.policies = {
   * access)                                                                  *
   *                                                                          *
   ***************************************************************************/
-  '*': ['passport', 'bearerAuth'],
+  '*': ['passport'],
 
   /**
    * [AuthController description]
