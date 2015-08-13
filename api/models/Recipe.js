@@ -9,22 +9,51 @@ module.exports = {
     schema: true,
 
     attributes: {
-        category: {model: 'category', required: true},
-        feelings: {collection: 'feeling', via: 'recipes'},
+        category: {
+            model: 'category',
+            required: true
+        },
+        feelings: {
+            collection: 'feeling',
+            via: 'recipes'
+        },
+        cooktime: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+        amount: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+        calorie: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+        temperature: {
+            type: 'string',
+            defaultsTo: '',
+        },
+        expire: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
 
         /** @type {Object} 레시피 제목 */
         title: {
             type: 'string',
-            minLength: 4,
             maxLength: 255,
             required: true,
         },
 
         /** @type {Object} 레시피 조리 방법 */
-        method: {
-            type: 'text',
-            minLength: 10,
-            required: true,
+        methods: {
+            collection: 'method',
+            via: 'recipe',
+        },
+
+        methodThumbs: {
+            collection: 'Resource',
+            via: 'recipe'
         },
 
         /** @type {Object} 레시피 썸네일 */

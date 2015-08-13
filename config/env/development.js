@@ -19,7 +19,7 @@ module.exports = {
 
   models: {
     connection: 'coreDB',
-    migrate: 'safe',
+    migrate: 'drop',
   },
 
   hookTimeout: 1000000,

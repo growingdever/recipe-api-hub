@@ -6,48 +6,30 @@
 */
 
 module.exports = {
-  schema: true,
+    schema: true,
 
-  attributes: {
-    /**
-     * 이미지 여부
-     * @type {Object}
-     */
-    isImage: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: false,
-    },
+    attributes: {
+        /**
+        * 이미지 여부
+        * @type {Object}
+        */
+        isImage: {
+            type: 'boolean',
+            required: true,
+            defaultsTo: false,
+        },
 
-    /**
-     * 저장 주소
-     * @type {Object}
-     */
-    reference: {
-      type: 'string',
-      required: true,
-    },
+        /**
+        * 저장 주소
+        * @type {Object}
+        */
+        reference: {
+            type: 'string',
+            required: true,
+        },
 
-    /**
-     * 파일 원본 이름
-     * @type {Object}
-     */
-    name: {
-      type: 'string',
-      required: true,
-    },
-
-    /** @type {Object} 파일 확장자 */
-    ext: {
-      type: 'string',
-      required: true,
-    },
-
-    /** @type {Object} 파일 MINE type */
-    type: {
-      type: 'string',
-      required: true,
-    },
-  }
+        recipe: {
+            model: 'recipe',
+        }
+    }
 };
-
