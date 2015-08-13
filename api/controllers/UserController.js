@@ -7,8 +7,8 @@
 
 module.exports = {
 	me: function (req, res) {
-    res.ok(req.user);
-  },
+		res.ok(req.user);
+	},
 
 	update: function (req, res) {
 		var params = req.paramAll();
@@ -45,7 +45,7 @@ module.exports = {
 				User
 					.findOneByIdentifier(params.identifier)
 					.then(function (user) {
-						
+
 					})
 					.catch(function (error) {
 						return cb(error);
