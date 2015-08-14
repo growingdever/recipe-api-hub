@@ -8,8 +8,6 @@
 module.exports = {
     schema: true,
 
-    migrate: 'drop',
-
     attributes: {
         category: {
             model: 'category',
