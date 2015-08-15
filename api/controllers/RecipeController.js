@@ -7,9 +7,11 @@
 
 module.exports = {
 	find: function (req, res) {
-		Recipe
+		var query = Recipe
 			.find()
-			.limit(30)
+			.sort(req.query.sort || 'id ASC')
+			.skip(parseInt(req.query.skip) || 0)
+			.limit(parseInt(req.query.limit) || 30)
 			.populate('thumbnail')
 			.then(function (recipes) {
 				res.ok(recipes);
