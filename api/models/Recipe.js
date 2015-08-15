@@ -47,7 +47,7 @@ module.exports = {
 
         /** @type {Object} 레시피 조리 방법 */
         methods: {
-            collection: 'method',
+            collection: 'Method',
             via: 'recipe',
         },
 
@@ -80,9 +80,25 @@ module.exports = {
             via: 'recipe',
         },
 
-        attributes: {
-            collection: 'attribute',
-            via: 'recipes',
-        }
+        countViews: {type: 'integer', defaultsTo: 0},
+        countLikes: {type: 'integer', defaultsTo: 0},
+        countReviews: {type: 'integer', defaultsTo: 0},
+    },
+
+    afterCreate: function (recipe, cb) {
+        Category
+            .findOne({
+                id: recipe.category,
+            })
+            .then(function (category) {
+                category.countRecipes++;
+
+                category.save(function (error, category) {
+                    return cb(error);
+                });
+            })
+            .catch(function (error) {
+                cb(error);
+            });
     },
 };

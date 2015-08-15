@@ -10,6 +10,8 @@ module.exports = {
     attributes: {
         label: {type: 'string', required: true, unique: true,},
 
-        recipes: {collection: 'recipe', via: 'category'}
+        recipes: {collection: 'recipe', via: 'category'},
+
+        countRecipes: {type: 'integer', defaultsTo: 0},
     }
 };

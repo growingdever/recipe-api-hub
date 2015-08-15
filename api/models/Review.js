@@ -6,31 +6,61 @@
 */
 
 module.exports = {
-  schema: true,
+    schema: true,
 
-  attributes: {
-    /** @type {Object} 작성자 */
-    author: {
-      model: 'User',
-      required: true,
+    attributes: {
+        /** @type {Object} 작성자 */
+        author: {
+            model: 'User',
+            required: true,
+        },
+
+        /** @type {Object} 레시피 */
+        recipe: {
+            model: 'Recipe',
+            required: true,
+        },
+
+        /** @type {Object} 리뷰 내용 */
+        content: {
+            type: 'text',
+            minLength: 10,
+        },
+
+        /** @type {Object} 리뷰 이미지 */
+        image: {
+            model: 'Resource'
+        },
     },
 
-    /** @type {Object} 레시피 */
-    recipe: {
-      model: 'Recipe',
-      required: true,
-    },
+    afterCreate: function (review, cb) {
+        async.parallel([
+            increaseUser,
+            increaseRecipe,
+        ], cb);
 
-    /** @type {Object} 리뷰 내용 */
-    content: {
-      type: 'text',
-      minLength: 10,
-    },
+        function increaseUser(cb) {
+            User
+                .findOne({
+                    id: review.author
+                })
+                .then(function (user) {
+                    user.countReviews++;
+                    user.save(cb);
+                })
+                .catch(cb);
+        }
 
-    /** @type {Object} 리뷰 이미지 */
-    image: {
-      model: 'Resource'
-    },
-  }
+        function increaseRecipe(cb) {
+            Recipe
+                .findOne({
+                    id: review.recipe
+                })
+                .then(function (recipe) {
+                    recipe.countReviews++;
+                    recipe.save(cb);
+                })
+                .catch(cb);
+        }
+    }
 };
-

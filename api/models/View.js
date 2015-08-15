@@ -6,18 +6,32 @@
 */
 
 module.exports = {
-  schema: true,
+    schema: true,
 
-  attributes: {
-    /** @type {Object} 조회자 */
-    user: {
-      model: 'User',
+    attributes: {
+        /** @type {Object} 조회자 */
+        user: {
+            model: 'User',
+            required: true,
+        },
+
+        /** @type {Object} 레시피 */
+        recipe: {
+            model: 'Recipe',
+            required: true,
+        }
     },
 
-    /** @type {Object} 레시피 */
-    recipe: {
-      model: 'Recipe',
-    }
-  }
-};
+    afterCreate: function (view, cb) {
+        Recipe
+            .findOne({
+                id: view.recipe,
+            })
+            .then(function (recipe) {
+                recipe.countViews++;
 
+                recipe.save(cb);
+            })
+            .catch(cb);
+    }
+};
