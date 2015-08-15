@@ -17,5 +17,19 @@ module.exports = {
 			.catch(function (error) {
 				res.ok(error);
 			});
-	}
+	},
+
+	findOne: function (req, res) {
+		Recipe
+			.findOne({
+				id: req.param('id'),
+			})
+			.populate('thumbnail')
+			.then(function (recipe) {
+				res.ok(recipe);
+			})
+			.catch(function (error) {
+				res.ok(error);
+			});
+	},
 };
