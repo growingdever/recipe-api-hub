@@ -45,6 +45,10 @@ module.exports.policies = {
     '*': ['passport'],
   },
 
+  RecipeController: {
+      '*': ['passport', 'bearerAuth'],
+  },
+
   TestController: {
     '*': ['passport'],
   },
