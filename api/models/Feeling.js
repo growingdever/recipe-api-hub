@@ -9,7 +9,7 @@ module.exports = {
     schema: true,
 
     attributes: {
-        label: {type: 'string', required: true,},
-        recipe: {model: 'Recipe', required: true,},
+        label: {type: 'string', required: true, unique: true,},
+        recipes: {collection: 'Recipe', via: 'feelings'},
     }
 };

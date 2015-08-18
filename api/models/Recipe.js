@@ -15,7 +15,7 @@ module.exports = {
         },
         feelings: {
             collection: 'feeling',
-            via: 'recipe'
+            via: 'recipes'
         },
         cooktime: {
             type: 'integer',

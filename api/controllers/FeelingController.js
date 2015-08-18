@@ -6,4 +6,18 @@
  */
 
 module.exports = {
+    addRecipe: function (req, res) {
+        Feeling
+            .findOne({
+                id: req.param('id'),
+            })
+            .then(function (feeling) {
+                feeling.recipes.add(req.param('recipe'));
+                feeling.save(res.ok);
+            })
+            .catch(function (error) {
+                sails.log(error);
+                return res.serverError();
+            });
+    }
 };
