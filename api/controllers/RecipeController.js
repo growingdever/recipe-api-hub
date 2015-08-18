@@ -30,6 +30,7 @@ module.exports = {
 				.skip(parseInt(req.query.skip) || 0)
 				.limit(parseInt(req.query.limit) || 30)
 				.populate('thumbnail')
+				.populate('feelings')
 				.then(function (recipes) {
 					return cb(null, recipes);
 				})
@@ -72,6 +73,7 @@ module.exports = {
 				id: req.param('id'),
 			})
 			.populate('thumbnail')
+			.populate('feelings')
 			.then(function (recipe) {
 				if (req.user) {
 					Like

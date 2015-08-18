@@ -6,9 +6,10 @@
 */
 
 module.exports = {
+    schema: true,
 
     attributes: {
-        label: {type: 'string', required: true, unique: true,},
-        recipes: {collection: 'recipe', via: 'feelings'},
+        label: {type: 'string', required: true,},
+        recipe: {model: 'Recipe', required: true,},
     }
 };
