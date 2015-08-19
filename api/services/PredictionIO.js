@@ -1,15 +1,11 @@
-/**
- * [exports description]
- * @return {[type]} [description]
- */
+var pioClients = {
+        myRecipe: {
+            url: '',
+        }
+    },
 
-var
-  /** @type {Array} loaded PredictionIO apps */
-  pioApps = {};
+    pioEvents = {
+    };
 
-/**
- * [exports description]
- * @return {[type]} [description]
- */
 module.exports = (function () {
 })();

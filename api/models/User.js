@@ -1,23 +1,16 @@
-var validator = require('validator');
-var async = require('async');
-var pio = require('predictionio-driver');
-
-var eventServer = new pio.Events({
-        appId: 4,
-        url: 'http://191.239.96.178:40002',
-        accessKey: '5nxT9DmtEL3oyR4g5ifDsKdtCjT3t6RvdMgFEkTqBhHqbQ1eBlXpXtrda7hIdxZ3',
-    }),
-
-    engineServer = new pio.Engine({
-        url: 'http://191.239.96.178:40003',
-    });
+var validator = require('validator'),
+    async = require('async');
 
 var User = {
     // Enforce model schema in the case of schemaless databases
     schema: true,
 
-    //
     attributes: {
+        isAdmin: {
+            type: 'boolean',
+            defaultsTo: false,
+        },
+
         /** @type {Object} 유저 로그인 아이디 */
         username: {
             type: 'alphanumeric', unique: true,

@@ -25,6 +25,8 @@ module.exports.connections = {
   coreDB: {
     adapter: env.DB_ADAPTER,
     url: env.DB_CREDENTIAL,
+    pool: false,
+    ssl: true,
   },
 
   /***************************************************************************
