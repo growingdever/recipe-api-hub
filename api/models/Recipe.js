@@ -86,19 +86,23 @@ module.exports = {
     },
 
     afterCreate: function (recipe, cb) {
-        Category
-            .findOne({
-                id: recipe.category,
-            })
-            .then(function (category) {
-                category.countRecipes++;
+        async.parallel([
+            function (cb) {
+                Category
+                    .findOne({
+                        id: recipe.category,
+                    })
+                    .then(function (category) {
+                        category.countRecipes++;
 
-                category.save(function (error, category) {
-                    return cb(error);
-                });
-            })
-            .catch(function (error) {
-                cb(error);
-            });
+                        category.save(function (error, category) {
+                            return cb(error);
+                        });
+                    })
+                    .catch(function (error) {
+                        cb(error);
+                    });
+            },
+        ], cb);
     },
 };

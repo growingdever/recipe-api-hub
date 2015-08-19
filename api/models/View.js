@@ -23,15 +23,34 @@ module.exports = {
     },
 
     afterCreate: function (view, cb) {
-        Recipe
-            .findOne({
-                id: view.recipe,
-            })
-            .then(function (recipe) {
-                recipe.countViews++;
+        async.parallel([
+            function (cb) {
+                Recipe
+                    .findOne({
+                        id: view.recipe,
+                    })
+                    .then(function (recipe) {
+                        recipe.countViews++;
 
-                recipe.save(cb);
-            })
-            .catch(cb);
+                        recipe.save(cb);
+                    })
+                    .catch(cb);
+            },
+
+            function (cb) {
+                var pioRecipe = Pio.getEvent('myRecipe');
+
+                pioRecipe
+                    .createAction({
+                        event: 'view',
+                        uid: view.user,
+                        iid: view.recipe,
+                    })
+                    .then(function (res) {
+                        return cb();
+                    })
+                    .catch(cb);
+            }
+        ], cb);
     }
 };

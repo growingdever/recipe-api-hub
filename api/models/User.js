@@ -11,13 +11,6 @@ var User = {
             defaultsTo: false,
         },
 
-        /** @type {Object} 유저 로그인 아이디 */
-        username: {
-            type: 'alphanumeric', unique: true,
-            minLength: 6, maxLength: 20,
-            required: true,
-        },
-
         /** @type {Object} 유저 이메일 */
         email: {
             type: 'email', unique: true,
@@ -129,7 +122,21 @@ var User = {
     },
 
     afterCreate: function (user, cb) {
-        cb();
+        async.parallel([
+            function (cb) {
+                var pioRecipe = Pio.getEvent('myRecipe');
+
+                pioRecipe
+                    .createUser({
+                        uid: user.id,
+                    })
+                    .then(function (res) {
+                        cb();
+                    })
+                    .catch(cb);
+            },
+
+        ], cb);
     }
 };
 

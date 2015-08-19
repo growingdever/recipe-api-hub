@@ -1,210 +1,192 @@
 var validator = require('validator');
-var crypto    = require('crypto');
+var crypto = require('crypto');
 
 /**
- * Local Authentication Protocol
- *
- * The most widely used way for websites to authenticate users is via a username
- * and/or email as well as a password. This module provides functions both for
- * registering entirely new users, assigning passwords to already registered
- * users and validating login requesting.
- *
- * For more information on local authentication in Passport.js, check out:
- * http://passportjs.org/guide/username-password/
- */
+* Local Authentication Protocol
+*
+* The most widely used way for websites to authenticate users is via a username
+* and/or email as well as a password. This module provides functions both for
+* registering entirely new users, assigning passwords to already registered
+* users and validating login requesting.
+*
+* For more information on local authentication in Passport.js, check out:
+* http://passportjs.org/guide/username-password/
+*/
 
 /**
- * Register a new user
- *
- * This method creates a new user from a specified email, username and password
- * and assign the newly created user a local Passport.
- *
- * @param {Object}   req
- * @param {Object}   res
- * @param {Function} next
- */
-exports.register = function (req, res, next) {
-  var email    = req.param('email')
-    , username = req.param('username')
-    , password = req.param('password')
-    , nickname = req.param('nickname');
+* Register a new user
+*
+* This method creates a new user from a specified email, username and password
+* and assign the newly created user a local Passport.
+*
+* @param {Object}   req
+* @param {Object}   res
+* @param {Function} next
+*/
+exports.register = function(req, res, next) {
+    var email = req.param('email'),
+        password = req.param('password'),
+        nickname = req.param('nickname'),
+        age = req.param('age'),
+        gender = req.param('gender');
 
-  if (!email) {
-    req.flash('error', 'Error.Passport.Email.Missing');
-    return next(new Error('No email was entered.'));
-  }
-
-  if (!username) {
-    req.flash('error', 'Error.Passport.Username.Missing');
-    return next(new Error('No username was entered.'));
-  }
-
-  if (!nickname) {
-    req.flash('error', 'Error.Passport.Nickname.Missing');
-    return next(new Error('No nickname was entered.'));
-  }
-
-  if (!password) {
-    req.flash('error', 'Error.Passport.Password.Missing');
-    return next(new Error('No password was entered.'));
-  }
-
-  User.create({
-    username : username,
-    email    : email,
-    nickname : nickname
-  }, function (err, user) {
-    if (err) {
-      if (err.code === 'E_VALIDATION') {
-        if (err.invalidAttributes.email) {
-          sails.log(err.invalidAttributes.email[0].rule);
-
-          switch (err.invalidAttributes.email[0].rule) {
-            case 'email':
-                req.flash('error', 'Error.Passport.Email.Invalid');
-              break;
-            case 'unique':
-                req.flash('error', 'Error.Passport.Email.Exists');
-              break;
-            default:
-                req.flash('error', 'Error.Passport.Email.Unknown');
-              break;
-          }
-        }
-        else if(err.invalidAttributes.nickname) {
-            req.flash('error', 'Error.Passport.Nickname.Invalid');
-        }
-        else {
-          sails.log(err);
-          req.flash('error', 'Error.Passport.Unknown');
-        }
-      }
-
-      return next(err);
+    if (!email) {
+        req.flash('error', 'Error.Passport.Email.Missing');
+        return next(new Error('No email was entered.'));
     }
 
-    // Generating accessToken for API authentication
-    var token = crypto.randomBytes(48).toString('base64');
+    if (!nickname) {
+        req.flash('error', 'Error.Passport.Nickname.Missing');
+        return next(new Error('No nickname was entered.'));
+    }
 
-    Passport.create({
-      protocol    : 'local',
-      password    : password,
-      user        : user.id,
-      accessToken : token
-    }, function (err, passport) {
-      if (err) {
-        if (err.code === 'E_VALIDATION') {
-          req.flash('error', 'Error.Passport.Password.Invalid');
+    if (!password) {
+        req.flash('error', 'Error.Passport.Password.Missing');
+        return next(new Error('No password was entered.'));
+    }
+
+    var userData = {
+        email: email,
+        nickname: nickname,
+    };
+
+    if (age) {
+        userData.age = age;
+    }
+
+    if (gender) {
+        userData.gender = gender;
+    }
+
+    User.create(userData, function(err, user) {
+        if (err) {
+            console.log(err);
+            if (err.error && err.error === 'E_VALIDATION') {
+                return res.ok(err);
+            }
+
+            return next(err);
         }
 
-        return user.destroy(function (destroyErr) {
-          next(destroyErr || err);
+        // Generating accessToken for API authentication
+        var token = crypto.randomBytes(48).toString('base64');
+
+        Passport.create({
+            protocol: 'local',
+            password: password,
+            user: user.id,
+            accessToken: token
+        }, function(err, passport) {
+            if (err) {
+                if (err.code === 'E_VALIDATION') {
+                    req.flash('error', 'Error.Passport.Password.Invalid');
+                }
+
+                return user.destroy(function(destroyErr) {
+                    next(destroyErr || err);
+                });
+            }
+
+            next(null, user);
         });
-      }
-
-      next(null, user);
     });
-  });
 };
 
 /**
- * Assign local Passport to user
- *
- * This function can be used to assign a local Passport to a user who doens't
- * have one already. This would be the case if the user registered using a
- * third-party service and therefore never set a password.
- *
- * @param {Object}   req
- * @param {Object}   res
- * @param {Function} next
- */
-exports.connect = function (req, res, next) {
-  var user     = req.user,
-  spassword = req.param('password');
-
-  Passport.findOne({
-    protocol : 'local',
-    user     : user.id
-  }, function (err, passport) {
-    if (err) {
-      return next(err);
-    }
-
-    if (!passport) {
-      Passport.create({
-        protocol : 'local',
-        password : password
-      , user     : user.id
-      }, function (err, passport) {
-        next(err, user);
-      });
-    }
-    else {
-      next(null, user);
-    }
-  });
-};
-
-/**
- * Validate a login request
- *
- * Looks up a user using the supplied identifier (email or username) and then
- * attempts to find a local Passport associated with the user. If a Passport is
- * found, its password is checked against the password supplied in the form.
- *
- * @param {Object}   req
- * @param {string}   identifier
- * @param {string}   password
- * @param {Function} next
- */
-exports.login = function (req, identifier, password, next) {
-  var isEmail = validator.isEmail(identifier),
-        query   = {};
-
-  if (isEmail) {
-    query.email = identifier;
-  }
-  else {
-    query.username = identifier;
-  }
-
-  User.findOne(query, function (err, user) {
-    if (err) {
-      return next(err);
-    }
-
-    if (!user) {
-      if (isEmail) {
-        req.flash('error', 'Error.Passport.Email.NotFound');
-      } else {
-        req.flash('error', 'Error.Passport.Username.NotFound');
-      }
-
-      return next(null, false);
-    }
+* Assign local Passport to user
+*
+* This function can be used to assign a local Passport to a user who doens't
+* have one already. This would be the case if the user registered using a
+* third-party service and therefore never set a password.
+*
+* @param {Object}   req
+* @param {Object}   res
+* @param {Function} next
+*/
+exports.connect = function(req, res, next) {
+    var user = req.user,
+    spassword = req.param('password');
 
     Passport.findOne({
-      protocol : 'local',
-      user     : user.id
-    }, function (err, passport) {
-      if (passport) {
-        passport.validatePassword(password, function (err, res) {
-          if (err) {
+        protocol: 'local',
+        user: user.id
+    }, function(err, passport) {
+        if (err) {
             return next(err);
-          }
+        }
 
-          if (!res) {
-            req.flash('error', 'Error.Passport.Password.Wrong');
-            return next(null, false);
-          } else {
-            return next(null, user);
-          }
-        });
-      }
-      else {
-        req.flash('error', 'Error.Passport.Password.NotSet');
-        return next(null, false);
-      }
+        if (!passport) {
+            Passport.create({
+                protocol: 'local',
+                password: password,
+                user: user.id
+            }, function(err, passport) {
+                next(err, user);
+            });
+        } else {
+            next(null, user);
+        }
     });
-  });
+};
+
+/**
+* Validate a login request
+*
+* Looks up a user using the supplied identifier (email or username) and then
+* attempts to find a local Passport associated with the user. If a Passport is
+* found, its password is checked against the password supplied in the form.
+*
+* @param {Object}   req
+* @param {string}   identifier
+* @param {string}   password
+* @param {Function} next
+*/
+exports.login = function(req, identifier, password, next) {
+    var isEmail = validator.isEmail(identifier),
+    query = {};
+
+    if (isEmail) {
+        query.email = identifier;
+    } else {
+        query.username = identifier;
+    }
+
+    User.findOne(query, function(err, user) {
+        if (err) {
+            return next(err);
+        }
+
+        if (!user) {
+            if (isEmail) {
+                req.flash('error', 'Error.Passport.Email.NotFound');
+            } else {
+                req.flash('error', 'Error.Passport.Username.NotFound');
+            }
+
+            return next(null, false);
+        }
+
+        Passport.findOne({
+            protocol: 'local',
+            user: user.id
+        }, function(err, passport) {
+            if (passport) {
+                passport.validatePassword(password, function(err, res) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    if (!res) {
+                        req.flash('error', 'Error.Passport.Password.Wrong');
+                        return next(null, false);
+                    } else {
+                        return next(null, user);
+                    }
+                });
+            } else {
+                req.flash('error', 'Error.Passport.Password.NotSet');
+                return next(null, false);
+            }
+        });
+    });
 };

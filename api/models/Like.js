@@ -23,15 +23,35 @@ module.exports = {
     },
 
     afterCreate: function (like, cb) {
-        Recipe
-            .findOne({
-                id: like.recipe,
-            })
-            .then(function (recipe) {
-                recipe.countLikes++;
+        async.parallel([
+            function (cb) {
+                Recipe
+                    .findOne({
+                        id: like.recipe,
+                    })
+                    .then(function (recipe) {
+                        recipe.countLikes++;
 
-                recipe.save(cb);
-            })
-            .catch(cb);
+                        recipe.save(cb);
+                    })
+                    .catch(cb);
+            },
+
+            function (cb) {
+                var pioRecipe = Pio.getEvent('myRecipe');
+
+                pioRecipe
+                    .createAction({
+                        event: 'like',
+                        uid: like.user,
+                        recipe: like.recipe,
+                    })
+                    .then(function (res) {
+                        return cb();
+                    })
+                    .catch(cb);
+            }
+
+        ], cb);
     }
 };

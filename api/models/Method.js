@@ -6,7 +6,6 @@
 */
 
 module.exports = {
-
     attributes: {
         recipe: {model: 'recipe', required: true},
         content: {type: 'string'},
