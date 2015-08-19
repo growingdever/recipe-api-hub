@@ -27,6 +27,7 @@ module.exports.connections = {
     url: env.DB_CREDENTIAL,
     pool: false,
     ssl: true,
+    poolSize: 20,
   },
 
   /***************************************************************************
