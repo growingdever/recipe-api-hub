@@ -44,7 +44,7 @@ module.exports = {
                     .createAction({
                         event: 'like',
                         uid: like.user,
-                        recipe: like.recipe,
+                        iid: like.recipe,
                     })
                     .then(function (res) {
                         return cb();
@@ -53,5 +53,25 @@ module.exports = {
             }
 
         ], cb);
+    },
+
+    beforeDestroy: function (credential, cb) {
+        Like
+            .findOne(credential)
+            .then(function (like) {
+                var pioRecipe = Pio.getEvent('myRecipe');
+
+                pioRecipe
+                    .createAction({
+                        event: 'cancel_like',
+                        uid: like.user,
+                        iid: like.recipe
+                    })
+                    .then(function () {
+                        return cb();
+                    })
+                    .catch(cb);
+            })
+            .catch(cb);
     }
 };

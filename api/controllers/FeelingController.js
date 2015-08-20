@@ -13,7 +13,11 @@ module.exports = {
             })
             .then(function (feeling) {
                 feeling.recipes.add(req.param('recipe'));
-                feeling.save(res.ok);
+                feeling.save(function (error, feeling) {
+                    console.log(feeling);
+                    
+                    return res.ok();
+                });
             })
             .catch(function (error) {
                 sails.log(error);
