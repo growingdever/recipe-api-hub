@@ -47,6 +47,8 @@ module.exports.routes = {
   'get /auth/:provider/callback': 'AuthController.callback',
   'get /auth/:provider/:action': 'AuthController.callback',
 
+  'get /recipes/:id/reviews': 'RecipeController.findReviews',
+
   'post /feelings/:id/recipes/:recipe': 'FeelingController.addRecipe',
 
   /***************************************************************************

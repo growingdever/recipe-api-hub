@@ -22,56 +22,56 @@ module.exports = {
         },
     },
 
-    afterCreate: function (like, cb) {
+    afterCreate: function(like, cb) {
         async.parallel([
-            function (cb) {
+            function(cb) {
                 Recipe
-                    .findOne({
-                        id: like.recipe,
-                    })
-                    .then(function (recipe) {
-                        recipe.countLikes++;
+                .findOne({
+                    id: like.recipe,
+                })
+                .then(function(recipe) {
+                    recipe.countLikes++;
 
-                        recipe.save(cb);
-                    })
-                    .catch(cb);
+                    recipe.save(cb);
+                })
+                .catch(cb);
             },
 
-            function (cb) {
+            function(cb) {
                 var pioRecipe = Pio.getEvent('myRecipe');
 
                 pioRecipe
-                    .createAction({
-                        event: 'like',
-                        uid: like.user,
-                        iid: like.recipe,
-                    })
-                    .then(function (res) {
-                        return cb();
-                    })
-                    .catch(cb);
+                .createAction({
+                    event: 'like',
+                    uid: like.user,
+                    iid: like.recipe,
+                })
+                .then(function(res) {
+                    return cb();
+                })
+                .catch(cb);
             }
 
         ], cb);
     },
 
-    beforeDestroy: function (credential, cb) {
+    beforeDestroy: function(credential, cb) {
         Like
-            .findOne(credential)
-            .then(function (like) {
-                var pioRecipe = Pio.getEvent('myRecipe');
+        .findOne(credential)
+        .then(function(like) {
+            var pioRecipe = Pio.getEvent('myRecipe');
 
-                pioRecipe
-                    .createAction({
-                        event: 'cancel_like',
-                        uid: like.user,
-                        iid: like.recipe
-                    })
-                    .then(function () {
-                        return cb();
-                    })
-                    .catch(cb);
+            pioRecipe
+            .createAction({
+                event: 'cancel_like',
+                uid: like.user,
+                iid: like.recipe
+            })
+            .then(function() {
+                return cb();
             })
             .catch(cb);
+        })
+        .catch(cb);
     }
 };

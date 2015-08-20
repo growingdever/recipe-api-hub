@@ -11,6 +11,11 @@ var User = {
             defaultsTo: false,
         },
 
+        profile: {
+            type: 'string',
+            defaultsTo: '',
+        },
+
         /** @type {Object} 유저 이메일 */
         email: {
             type: 'email', unique: true,
@@ -57,7 +62,34 @@ var User = {
         passports : {
             collection: 'Passport',
             via: 'user'
-        }
+        },
+
+        toJSON: function () {
+            var object = this.toObject();
+            var contains = ['profile', 'nickname'];
+
+            for (var i in object) {
+                var removed = true;
+
+                contains.some(loop(i));
+
+                if (removed) {
+                    delete object[i];
+                }
+            }
+
+            function loop(i) {
+                return function (attr, index) {
+                    if (attr === i) {
+                        removed = false;
+
+                        return true;
+                    }
+                };
+            }
+
+            return object;
+        },
     },
 
     findOneByIdentifier: function (identifier) {
