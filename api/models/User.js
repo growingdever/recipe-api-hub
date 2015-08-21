@@ -76,7 +76,7 @@ var User = {
 
         toJSON: function () {
             var object = this.toObject();
-            var contains = ['id', 'profile', 'nickname'];
+            var contains = ['email', 'id', 'profile', 'nickname'];
 
             for (var i in object) {
                 var removed = true;
