@@ -11,6 +11,16 @@ var User = {
             defaultsTo: false,
         },
 
+        countNewEvents: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+
+        predictionCached: {
+            type: 'boolean',
+            defaultsTo: false,
+        },
+
         profile: {
             type: 'string',
             defaultsTo: '',
@@ -66,7 +76,7 @@ var User = {
 
         toJSON: function () {
             var object = this.toObject();
-            var contains = ['profile', 'nickname'];
+            var contains = ['id', 'profile', 'nickname'];
 
             for (var i in object) {
                 var removed = true;
@@ -159,13 +169,13 @@ var User = {
                 var pioRecipe = Pio.getEvent('myRecipe');
 
                 pioRecipe
-                    .createUser({
-                        uid: user.id,
-                    })
-                    .then(function (res) {
-                        cb();
-                    })
-                    .catch(cb);
+                .createUser({
+                    uid: user.id,
+                })
+                .then(function (res) {
+                    cb();
+                })
+                .catch(cb);
             },
 
         ], cb);

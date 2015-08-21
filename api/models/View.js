@@ -46,11 +46,15 @@ module.exports = {
                         uid: view.user,
                         iid: view.recipe,
                     })
-                    .then(function (res) {
-                        return cb();
-                    })
+                    .then(success)
                     .catch(cb);
-            }
+
+                function success(res) {
+                    return cb();
+                }
+            },
+
+            serviceEvent.userNewAction(view.user),
         ], cb);
     }
 };

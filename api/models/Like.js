@@ -24,7 +24,7 @@ module.exports = {
 
     afterCreate: function(like, cb) {
         async.parallel([
-            function(cb) {
+            function addLikes(cb) {
                 Recipe
                 .findOne({
                     id: like.recipe,
@@ -37,7 +37,7 @@ module.exports = {
                 .catch(cb);
             },
 
-            function(cb) {
+            function sendToML(cb) {
                 var pioRecipe = Pio.getEvent('myRecipe');
 
                 pioRecipe
@@ -50,7 +50,9 @@ module.exports = {
                     return cb();
                 })
                 .catch(cb);
-            }
+            },
+
+            serviceEvent.userNewAction(like.user),
 
         ], cb);
     },

@@ -7,22 +7,6 @@
 var async = require('async');
 
 module.exports = {
-	recommendations: function(req, res) {
-		async.waterfall([
-
-		], done);
-
-		function done(error, result) {
-			if (error) {
-				sails.log(error);
-
-				return res.serverError();
-			}
-
-			return res.ok(result);
-		}
-	},
-
 	find: function(req, res) {
 		async.waterfall([
 			findRecipes,
