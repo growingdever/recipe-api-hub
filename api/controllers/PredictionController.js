@@ -9,47 +9,6 @@ module.exports = {
         rest: true,
     },
 
-    test: function (req, res) {
-        var pioRecipe = Pio.getClient('myRecipe');
-        var skip    = req.query.skip    || 0;
-        var limit   = req.query.limit   || 15;
-
-        pioRecipe.sendQuery({
-            user: req.user.id,
-            num: 300,
-        })
-        .then(function (result) {
-            var predictions = result.itemScores;
-
-            console.log(predictions);
-
-            predictions = predictions.slice(skip, limit);
-
-            console.log(skip, limit);
-            console.log(predictions);
-
-            var items = [];
-
-            predictions.forEach(function (item, idx) {
-                items.push(item.item);
-            });
-
-            Recipe
-                .find({
-                    id: items
-                })
-                .populate('thumbnail')
-                .then(function (result) {
-                    return res.ok(result);
-                })
-                .catch(function (error) {
-                    sails.log(error);
-
-                    return res.serverError();
-                });
-        });
-    },
-
     /**
      * API 사용법
      * GET /predictions?skip=0&limit=30
@@ -108,9 +67,9 @@ module.exports = {
         // update if user's actions are stacked
         function updateCache(cb) {
             console.log(user.countNewEvents, user.predictionCached);
-            /*if (user.countNewEvents < stackLimit || user.predictionCached) {
+            if (user.countNewEvents < stackLimit || user.predictionCached) {
                 return cb();
-            }*/
+            }
 
             async.waterfall([
                 destroyCache,
