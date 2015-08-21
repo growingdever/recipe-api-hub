@@ -85,7 +85,24 @@ module.exports = {
 
             Prediction
             .find(criteria)
-            .exec(cb);
+            .then(function (predictions) {
+                var items = [];
+
+                predictions.forEach(function (prediction, idx) {
+                    items.push(prediction.item);
+                });
+
+                Recipe
+                .find({
+                    id: items,
+                })
+                .populate('thumbnail')
+                .then(function (result) {
+                    return cb(null, result);
+                })
+                .catch(cb);
+            })
+            .catch(cb);
         }
 
         // update if user's actions are stacked
@@ -107,7 +124,10 @@ module.exports = {
                 .destroy({
                     user: user.id,
                 })
-                .exec(cb);
+                .then(function () {
+                    return cb();
+                })
+                .catch(cb);
             }
 
             // make forecast
@@ -122,20 +142,23 @@ module.exports = {
                     var predictions = result.itemScores;
 
                     async.each(predictions, insertCache, cb);
-                });
 
-                function insertCache(prediction, cb2) {
-                    Prediction
-                    .create({
-                        user: user.id,
-                        item: parseInt(prediction.item),
-                        score: prediction.score,
-                    })
-                    .then(function (res) {
-                        return cb2();
-                    })
-                    .catch(cb2);
-                }
+                    function insertCache(prediction, cb) {
+                        Prediction
+                        .create({
+                            user: user.id,
+                            item: parseInt(prediction.item),
+                            score: prediction.score,
+                        })
+                        .then(function (res) {
+                            return cb();
+                        })
+                        .catch(cb);
+                    }
+                })
+                .catch(function (error) {
+                    return cb(error);
+                });
             }
 
             /**
@@ -144,8 +167,6 @@ module.exports = {
              * @return {[type]}      [description]
              */
             function initializeUser(cb) {
-                return cb();
-
                 User
                 .findOne({
                     id: user.id,
@@ -153,7 +174,9 @@ module.exports = {
                 .then(function (user) {
                     user.countNewEvents = 0;
                     user.predictionCached = true;
-                    user.save(cb);
+                    user.save(function (error) {
+                        return cb(error);
+                    });
                 })
                 .catch(cb);
             }

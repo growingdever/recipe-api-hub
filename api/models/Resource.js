@@ -30,6 +30,16 @@ module.exports = {
 
         recipe: {
             model: 'recipe',
+        },
+
+        toJSON: function () {
+            var object = this.toObject();
+
+            delete object.createdAt;
+            delete object.updatedAt;
+            delete object.id;
+
+            return object;
         }
     }
 };
