@@ -8,6 +8,8 @@
 module.exports = {
     schema: true,
 
+    autoUpdatedAt: false,
+
     attributes: {
         /** @type {Object} 조회자 */
         user: {
@@ -24,7 +26,7 @@ module.exports = {
 
     afterCreate: function (view, cb) {
         async.parallel([
-            function (cb) {
+            function increaseViewCount(cb) {
                 Recipe
                     .findOne({
                         id: view.recipe,
@@ -32,12 +34,14 @@ module.exports = {
                     .then(function (recipe) {
                         recipe.countViews++;
 
-                        recipe.save(cb);
+                        recipe.save(function (error, recipe) {
+                            return cb(error);
+                        });
                     })
                     .catch(cb);
             },
 
-            function (cb) {
+            function sendToML(cb) {
                 var pioRecipe = Pio.getEvent('myRecipe');
 
                 pioRecipe
@@ -52,9 +56,53 @@ module.exports = {
                 function success(res) {
                     return cb();
                 }
-            },
-
-            serviceEvent.userNewAction(view.user),
+            }
         ], cb);
+    },
+
+    beforeDestroy: function (criteria, cb) {
+        async.waterfall([
+            bringView,
+            detachEvent,
+        ], cb);
+
+        function bringView(cb) {
+            View
+                .find(criteria)
+                .exec(function (error, views) {
+                    return cb(error, views);
+                });
+        }
+
+        function detachEvent(views, cb) {
+            async.each(views, eachView, cb);
+
+            function eachView(view, cb) {
+                async.parallel([
+                    decreaseCount,
+                    sendToML,
+                ], cb);
+
+                function decreaseCount(cb) {
+                    Recipe
+                        .findOne({
+                            id: view.recipe,
+                        })
+                        .then(function (recipe) {
+                            recipe.countViews--;
+
+                            recipe.save(function (error, recipe) {
+                                return cb(error);
+                            });
+                        })
+                        .catch(cb);
+                }
+
+                function sendToML(cb) {
+                    // TODO: unset pio
+                    return cb();
+                }
+            }
+        }
     }
 };

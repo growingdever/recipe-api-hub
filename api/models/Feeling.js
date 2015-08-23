@@ -14,9 +14,24 @@ module.exports = {
             required: true,
             unique: true,
         },
+
         recipes: {
             collection: 'Recipe',
             via: 'feelings'
         },
+
+        countRecipes: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+
+        toJSON: function () {
+            var object = this.toObject();
+
+            delete object.createdAt;
+            delete object.updatedAt;
+
+            return object;
+        }
     }
 };

@@ -7,21 +7,52 @@
 
 module.exports = {
     addRecipe: function (req, res) {
-        Feeling
-            .findOne({
-                id: req.param('id'),
-            })
-            .then(function (feeling) {
-                feeling.recipes.add(req.param('recipe'));
-                feeling.save(function (error, feeling) {
-                    console.log(feeling);
-                    
-                    return res.ok();
-                });
-            })
-            .catch(function (error) {
-                sails.log(error);
-                return res.serverError();
-            });
+        async.waterfall([
+            insertFeeling,
+        ], serviceUtil.response(req, res));
+
+        var feelingId = req.param('id');
+        var recipeId = req.param('recipe');
+
+        function insertFeeling(cb) {
+            Feeling
+                .findOne({
+                    id: feelingId,
+                })
+                .then(function (feeling) {
+                    feeling.recipes.add(recipeId);
+                    feeling.countRecipes++;
+
+                    feeling.save(function (error, feeling) {
+                        return cb(error);
+                    });
+                })
+                .catch(cb);
+        }
+    },
+
+    removeRecipe: function (req, res) {
+        async.waterfall([
+            detachFeeling,
+        ], serviceUtil.response(req, res));
+
+        var feelingId = req.param('id');
+        var recipeId = req.param('recipe');
+
+        function deatchFeeling(cb) {
+            Feeling
+                .findOne({
+                    id: feelingId,
+                })
+                .then(function (feeling) {
+                    feeling.recipes.remove(recipeId);
+                    feeling.countRecipes--;
+
+                    feeling.save(function (error, feeling) {
+                        return cb(error);
+                    });
+                })
+                .catch(cb);
+        }
     }
 };

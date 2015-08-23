@@ -46,7 +46,10 @@ module.exports = {
                 })
                 .then(function (user) {
                     user.countReviews++;
-                    user.save(cb);
+
+                    user.save(function (error, user) {
+                        return cb(error);
+                    });
                 })
                 .catch(cb);
         }
@@ -58,9 +61,62 @@ module.exports = {
                 })
                 .then(function (recipe) {
                     recipe.countReviews++;
-                    recipe.save(cb);
+                    recipe.save(function (error, user) {
+                        return cb(error);
+                    });
                 })
                 .catch(cb);
+        }
+    },
+
+    beforeDestroy: function (criteria, cb) {
+        async.waterfall([
+            findReview,
+            decreaseCount,
+        ], cb);
+
+        function findReview(cb) {
+            Review
+                .findOne(criteria)
+                .then(function (review) {
+                    return cb(null, review);
+                })
+                .catch(cb);
+        }
+
+        function decreaseCount(review, cb) {
+            async.parallel([
+                decreaseUser,
+                decreaseRecipe,
+            ], cb);
+
+            function decreaseUser(cb) {
+                User
+                    .findOne({
+                        id: review.author
+                    })
+                    .then(function (user) {
+                        user.countReviews--;
+                        user.save(function (error, user) {
+                            return cb(error);
+                        });
+                    })
+                    .catch(cb);
+            }
+
+            function decreaseRecipe(cb) {
+                Recipe
+                    .findOne({
+                        id: review.recipe
+                    })
+                    .then(function (recipe) {
+                        recipe.countReviews--;
+                        recipe.save(function (error, user) {
+                            return cb(error);
+                        });
+                    })
+                    .catch(cb);
+            }
         }
     }
 };

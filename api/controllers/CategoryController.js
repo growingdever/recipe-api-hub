@@ -6,4 +6,24 @@
  */
 
 module.exports = {
+    find: function (req, res) {
+        async.waterfall([
+            bringCategories,
+        ], serviceUtil.response(req, res));
+
+        function bringCategories(cb) {
+            Category
+                .find({
+                    where: {
+                        countRecipes: {
+                            '>': 0,
+                        }
+                    },
+                })
+                .then(function (res) {
+                    return cb(null, res);
+                })
+                .catch(cb);
+        }
+    }
 };

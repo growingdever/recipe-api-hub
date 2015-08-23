@@ -8,6 +8,8 @@
 module.exports = {
     schema: true,
 
+    autoUpdatedAt: false,
+
     attributes: {
         /** @type {Object} 레시피 */
         recipe: {
@@ -32,7 +34,9 @@ module.exports = {
                 .then(function(recipe) {
                     recipe.countLikes++;
 
-                    recipe.save(cb);
+                    recipe.save(function (error, recipe) {
+                        return cb(error);
+                    });
                 })
                 .catch(cb);
             },
@@ -52,28 +56,50 @@ module.exports = {
                 .catch(cb);
             },
 
-            serviceEvent.userNewAction(like.user),
-
         ], cb);
     },
 
-    beforeDestroy: function(credential, cb) {
-        Like
-        .findOne(credential)
-        .then(function(like) {
-            var pioRecipe = Pio.getEvent('myRecipe');
+    beforeDestroy: function(criteria, cb) {
+        async.waterfall([
+            bringLike,
+            detachLike,
+        ], cb);
 
-            pioRecipe
-            .createAction({
-                event: 'cancel_like',
-                uid: like.user,
-                iid: like.recipe
-            })
-            .then(function() {
-                return cb();
+        function bringLike(cb) {
+            Like
+            .findOne(criteria)
+            .then(function (like) {
+                return cb(null, like);
             })
             .catch(cb);
-        })
-        .catch(cb);
+        }
+
+        function detachLike(like, cb) {
+            async.parallel([
+                sendToML,
+                decreaseCount,
+            ], cb);
+
+            function sendToML(cb) {
+                var pioRecipe = Pio.getEvent('myRecipe');
+
+                // TODO: delete like
+                return cb();
+            }
+
+            function decreaseCount(cb) {
+                Recipe
+                .findOne({
+                    id: like.recipe,
+                })
+                .then(function (recipe) {
+                    recipe.countLikes--;
+                    recipe.save(function (error, recipe) {
+                        return cb(error);
+                    });
+                })
+                .catch(cb);
+            }
+        }
     }
 };

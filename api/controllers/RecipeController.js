@@ -24,11 +24,27 @@ module.exports = {
 		}
 
 		function findRecipes(cb) {
+			var criteria = {
+				skip: parseInt(req.query.skip)		|| 0,
+				limit: parseInt(req.query.limit)	|| 30,
+				sort: req.query.sort 				|| 'id ASC',
+				where: req.query.where
+			};
+
+			if (criteria.where) {
+				try {
+					criteria.where = JSON.parse(criteria.where);
+				}
+				catch (e) {
+					return cb(e);
+				}
+			}
+			else {
+				delete criteria.where;
+			}
+
 			var query = Recipe
-			.find()
-			.sort(req.query.sort || 'id ASC')
-			.skip(parseInt(req.query.skip) || 0)
-			.limit(parseInt(req.query.limit) || 30)
+			.find(criteria)
 			.populate('thumbnail')
 			.populate('feelings')
 			.then(function(recipes) {

@@ -17,127 +17,103 @@ module.exports = {
      * @return {[type]}     [description]
      */
     find: function (req, res) {
-        var user = req.user;
-        if (!user) {
-            return res.forbidden();
-        }
-
-        // display options
-        var criteria = {
-            skip    : req.param('skip')     || 0,
-            limit   : req.param('limit')    || 30,
-            sort    : req.param('sort')     || 'score DESC',
-        };
-
-        // limit count of users' new event before request ML predictions.
-        var stackLimit = 3;
-
         async.waterfall([
-            updateCache,
-            serveCache,
+            // 추천 정보를 가져옴
+            bringRecommendation,
+
+            // 추천 정보와 레시피를 연결함
+            matchRecipe,
         ], serviceUtil.response(req, res));
 
-        ////////////////
+        function bringRecommendation(cb) {
+            var user = req.user;
+            if (!user) {
+                return res.forbidden();
+            }
 
-        function serveCache(cb) {
-            criteria.user = user.id;
+            var pioRecipe = Pio.getClient('myRecipe');
 
-            Prediction
-            .find(criteria)
-            .then(function (predictions) {
-                var items = [];
+            // display options
+            var criteria = {
+                skip    : parseInt(req.param('skip'))   || 0,
+                limit   : parseInt(req.param('limit'))  || 15,
+                user    : user.id,
+            };
+            criteria.limit += criteria.skip;
 
-                predictions.forEach(function (prediction, idx) {
-                    items.push(prediction.item);
-                });
+            // conditonal filters
+            var where = req.param('where');
+            if (where) {
+                try {
+                    where = JSON.parse(where);
+                }
+                catch (e) {
+                    return cb(e);
+                }
 
-                Recipe
-                .find({
-                    id: items,
-                })
-                .populate('thumbnail')
-                .then(function (result) {
-                    return cb(null, result);
-                })
-                .catch(cb);
+                if (where.feelings) {
+                    criteria.feelings = where.feelings;
+                }
+
+                if (where.categories) {
+                    criteria.categories = where.categories;
+                }
+            }
+
+            pioRecipe
+            .sendQuery(criteria)
+            .then(function (result) {
+                return cb(null, result.itemScores);
             })
             .catch(cb);
         }
 
-        // update if user's actions are stacked
-        function updateCache(cb) {
-            console.log(user.countNewEvents, user.predictionCached);
-            if (user.countNewEvents < stackLimit || user.predictionCached) {
-                return cb();
-            }
+        function matchRecipe(predictions, cb) {
+            var matches = [];
+
+            predictions.forEach(function (prediction, idx) {
+                matches.push(prediction.item);
+            });
 
             async.waterfall([
-                destroyCache,
-                createCache,
-                initializeUser,
-            ], cb);
+                bringRecipes,
+                sortRecipes,
+            ], done);
 
-            // remove past
-            function destroyCache(cb) {
-                Prediction
-                .destroy({
-                    user: user.id,
-                })
-                .then(function () {
-                    return cb();
-                })
-                .catch(cb);
+            function bringRecipes(cb) {
+                Recipe
+                    .find({
+                        id: matches,
+                    })
+                    .then(function (recipes) {
+                        return cb(null, recipes);
+                    })
+                    .catch(cb);
             }
 
-            // make forecast
-            function createCache(cb) {
-                var pioRecipe = Pio.getClient('myRecipe');
+            function sortRecipes(recipes, cb) {
+                var sortedRecipes = [];
 
-                pioRecipe.sendQuery({
-                    user: req.user.id,
-                    num: 300,
-                })
-                .then(function (result) {
-                    var predictions = result.itemScores;
+                matches.forEach(function (id, idx) {
+                    id = parseInt(id);
+                    
+                    for ( var idx2 in recipes ) {
+                        var recipe = recipes[idx2];
 
-                    async.each(predictions, insertCache, cb);
+                        if (recipe.id === id) {
+                            sortedRecipes.push(recipe);
+                            delete recipes[idx2];
 
-                    function insertCache(prediction, cb) {
-                        Prediction
-                        .create({
-                            user: user.id,
-                            item: parseInt(prediction.item),
-                            score: prediction.score,
-                        })
-                        .then(function (res) {
-                            return cb();
-                        })
-                        .catch(cb);
+                            return;
+                        }
                     }
-                })
-                .catch(function (error) {
-                    return cb(error);
                 });
+
+                return cb(null, sortedRecipes);
             }
 
-            /**
-             * 유저 캐시 데이터를 업데이트합니다.
-             * @param  {Function} cb [description]
-             * @return {[type]}      [description]
-             */
-            function initializeUser(cb) {
-                User
-                .findOne({
-                    id: user.id,
-                })
-                .then(function (user) {
-                    user.countNewEvents = 0;
-                    user.predictionCached = true;
-                    user.save(function (error) {
-                        return cb(error);
-                    });
-                })
-                .catch(cb);
+            function done(error, recipes) {
+                return cb(error, recipes);
             }
         }
     },

@@ -69,8 +69,8 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  adapter: env.SESSION_ADAPTER,
-  url: env.SESSION_CREDENTIAL,
+  //adapter: env.SESSION_ADAPTER,
+  //url: env.SESSION_CREDENTIAL,
 
   //host: 'localhost',
   //port: 27017,

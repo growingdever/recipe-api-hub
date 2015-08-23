@@ -97,28 +97,10 @@ var Passport = {
         * @return {[type]} [description]
         */
         getAccessToken: function() {
-            var object = this.toObject(),
-            contains = ['accessToken'];
-
-            for (var i in object) {
-                var removed = true;
-
-                contains.some(loop(i));
-
-                if (removed) {
-                    delete object[i];
-                }
-            }
-
-            function loop(i) {
-                return function (attr, index) {
-                    if (attr === i) {
-                        removed = false;
-
-                        return true;
-                    }
-                };
-            }
+            var clone = this.toObject();
+            var object = {
+                accessToken: clone.accessToken,
+            };
 
             return object;
         },

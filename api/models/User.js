@@ -76,29 +76,14 @@ var User = {
 
         toJSON: function () {
             var object = this.toObject();
-            var contains = ['email', 'id', 'profile', 'nickname'];
-
-            for (var i in object) {
-                var removed = true;
-
-                contains.some(loop(i));
-
-                if (removed) {
-                    delete object[i];
-                }
-            }
-
-            function loop(i) {
-                return function (attr, index) {
-                    if (attr === i) {
-                        removed = false;
-
-                        return true;
-                    }
-                };
-            }
-
-            return object;
+            var contains = {
+                email: object.email,
+                id: object.id,
+                profile: object.profile,
+                nickname: object.nickname,
+            };
+            
+            return contains;
         },
     },
 
@@ -179,6 +164,11 @@ var User = {
             },
 
         ], cb);
+    },
+
+    beforeDestroy: function (criteria, cb) {
+        // TODO: unset user
+        return cb();
     }
 };
 

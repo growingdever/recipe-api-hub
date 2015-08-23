@@ -11,8 +11,18 @@ module.exports = {
             model: 'recipe',
             required: true
         },
+        
         content: {
             type: 'string'
         },
+
+        toJSON: function () {
+            var object = this.toObject();
+
+            delete object.createdAt;
+            delete object.updatedAt;
+
+            return object;
+        }
     }
 };

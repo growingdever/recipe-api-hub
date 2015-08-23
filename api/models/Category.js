@@ -23,5 +23,14 @@ module.exports = {
             type: 'integer',
             defaultsTo: 0
         },
+
+        toJSON: function () {
+            var object = this.toObject();
+
+            delete object.createdAt;
+            delete object.updatedAt;
+
+            return object;
+        }
     }
 };

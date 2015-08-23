@@ -9,30 +9,43 @@ module.exports = {
     schema: true,
 
     attributes: {
+        // 음식 종류
         category: {
             model: 'category',
             required: true
         },
+
+        // 식감
         feelings: {
             collection: 'feeling',
             via: 'recipes'
         },
+
+        // 조리시간
         cooktime: {
             type: 'integer',
             defaultsTo: 0,
         },
+
+        // 음식 양(인분)
         amount: {
             type: 'integer',
             defaultsTo: 0,
         },
+
+        // 칼로리
         calorie: {
             type: 'integer',
             defaultsTo: 0,
         },
+
+        // 보관온도
         temperature: {
             type: 'string',
             defaultsTo: '',
         },
+
+        // 보관일
         expire: {
             type: 'integer',
             defaultsTo: 0,
@@ -51,6 +64,7 @@ module.exports = {
             via: 'recipe',
         },
 
+        // 썸네일
         methodThumbs: {
             collection: 'Resource',
             via: 'recipe'
@@ -80,29 +94,78 @@ module.exports = {
             via: 'recipe',
         },
 
-        countViews: {type: 'integer', defaultsTo: 0},
-        countLikes: {type: 'integer', defaultsTo: 0},
-        countReviews: {type: 'integer', defaultsTo: 0},
+        countViews: {
+            type: 'integer',
+            defaultsTo: 0
+        },
+
+        countLikes: {
+            type: 'integer',
+            defaultsTo: 0
+        },
+
+        countReviews: {
+            type: 'integer',
+            defaultsTo: 0
+        },
+
+        toJSON: function() {
+            var object = this.toObject();
+
+            return object;
+        }
     },
 
-    afterCreate: function (recipe, cb) {
+    afterCreate: function(recipe, cb) {
         async.parallel([
-            function (cb) {
+            function(cb) {
                 Category
-                    .findOne({
-                        id: recipe.category,
-                    })
-                    .then(function (category) {
-                        category.countRecipes++;
+                .findOne({
+                    id: recipe.category,
+                })
+                .then(function(category) {
+                    category.countRecipes++;
 
-                        category.save(function (error, category) {
-                            return cb(error);
-                        });
-                    })
-                    .catch(function (error) {
-                        cb(error);
+                    category.save(function(error, category) {
+                        return cb(error);
                     });
+                })
+                .catch(function(error) {
+                    cb(error);
+                });
             },
         ], cb);
     },
+
+    beforeDestroy: function (criteria, cb) {
+        async.waterfall([
+            bringRecipe,
+
+            decreaseCount,
+        ], cb);
+
+        function bringRecipe(cb) {
+            Recipe
+                .findOne(criteria)
+                .then(function (recipe) {
+                    return cb(null, recipe);
+                })
+                .catch(cb);
+        }
+
+        function decreaseCount(recipe, cb) {
+            Category
+                .findOne({
+                    id: recipe.category,
+                })
+                .then(function (category) {
+                    category.countRecipes--;
+
+                    category.save(function (error, category) {
+                        return cb(error);
+                    });
+                })
+                .catch(cb);
+        }
+    }
 };
