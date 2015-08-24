@@ -19,6 +19,12 @@ module.exports.routes = {
   'get /auth/:provider/:action': 'AuthController.callback',
 
   ///
+  /// Recipe
+  ///
+  'post /recipes/:recipe/feelings/:id': 'FeelingController.addRecipe',
+  'delete /recipes/:recipe/feelings/:id': 'FeelingController.removeRecipe',
+
+  ///
   /// Like
   ///
   'post /recipes/:id/likes': 'LikeController.create',
