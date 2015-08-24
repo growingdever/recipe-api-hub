@@ -7,22 +7,18 @@
 var async = require('async');
 
 module.exports = {
+	/**
+	 * Recipe RESTful API Get
+	 * API Route: GET /recipes?skip=0&limit=30&where={}&sort=id ASC
+	 */
 	find: function(req, res) {
+		// 비동기 처리 수행
 		async.waterfall([
 			findRecipes,
 			matchLikes,
-		], done);
+		], serviceUtil.reponse(req, res));
 
-		function done(error, recipes) {
-			if (error) {
-				sails.log(error);
-
-				return res.serverError();
-			}
-
-			return res.ok(recipes);
-		}
-
+		// 레시피 조회
 		function findRecipes(cb) {
 			var criteria = {
 				skip: parseInt(req.query.skip)		|| 0,
@@ -56,12 +52,15 @@ module.exports = {
 			});
 		}
 
+		// 이전 좋아요 기록 연결
 		function matchLikes(recipes, cb) {
 			if (!req.user) {
 				return cb(null, recipes);
 			}
 
-			async.forEachOf(recipes, function(recipe, index, cb) {
+			async.forEachOf(recipes, eachRecipe, done);
+
+			function eachRecipe(recipe, index, cb) {
 				Like
 				.findOne({
 					user: req.user.id,
@@ -77,10 +76,11 @@ module.exports = {
 				.catch(function(error) {
 					return cb(error);
 				});
+			}
 
-			}, function(error) {
+			function done(error) {
 				return cb(error, recipes);
-			});
+			}
 		}
 	},
 

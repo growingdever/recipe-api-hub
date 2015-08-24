@@ -14,18 +14,15 @@ var AuthController = {
         pluralize: false,
     },
 
-    me: function (req, res) {
-		res.ok(req.user);
-	},
+    /// 나 자신을 조회합니다.
+    /// /auth/me
+    me: function(req, res) {
+        res.ok(req.user);
+    },
 
-    /**
-    * [bearer description]
-    * @param  {[type]} req [description]
-    * @param  {[type]} res [description]
-    * @return {[type]}     [description]
-    */
-    getAccessToken: function (req, res) {
-        passport.callback(req, res, function (err, user, challenges, statuses) {
+    /// accessToken을 조회합니다.
+    getAccessToken: function(req, res) {
+        passport.callback(req, res, function(err, user, challenges, statuses) {
             if (err) {
                 return res.serverError();
             }
@@ -36,7 +33,7 @@ var AuthController = {
                 });
             }
 
-            req.login(user, function (err) {
+            req.login(user, function(err) {
                 if (err) {
                     return res.serverError();
                 }
@@ -46,7 +43,7 @@ var AuthController = {
                     protocol: 'local',
                     user: user.id,
                 })
-                .exec(function (error, passport) {
+                .exec(function(error, passport) {
                     if (error) {
                         return res.serverError(error);
                     }
@@ -87,26 +84,26 @@ var AuthController = {
     * @param {Object} req
     * @param {Object} res
     */
-    login: function (req, res) {
-        var strategies = sails.config.passport
-        , providers  = {};
+    login: function(req, res) {
+        var strategies = sails.config.passport,
+        providers = {};
 
         // Get a list of available providers for use in your templates.
-        Object.keys(strategies).forEach(function (key) {
+        Object.keys(strategies).forEach(function(key) {
             if (key === 'local') {
                 return;
             }
 
             providers[key] = {
-                name: strategies[key].name
-                , slug: key
+                name: strategies[key].name,
+                slug: key
             };
         });
 
         // Render the `auth/login.ext` view
         res.view({
-            providers : providers
-            , errors    : req.flash('error')
+            providers: providers,
+            errors: req.flash('error')
         });
     },
 
@@ -124,7 +121,7 @@ var AuthController = {
     * @param {Object} req
     * @param {Object} res
     */
-    logout: function (req, res) {
+    logout: function(req, res) {
         req.logout();
 
         // mark the user as logged out for auth purposes
@@ -148,7 +145,7 @@ var AuthController = {
     * @param {Object} req
     * @param {Object} res
     */
-    register: function (req, res) {
+    register: function(req, res) {
         res.view({
             errors: req.flash('error')
         });
@@ -160,7 +157,7 @@ var AuthController = {
     * @param {Object} req
     * @param {Object} res
     */
-    provider: function (req, res) {
+    provider: function(req, res) {
         passport.endpoint(req, res);
     },
 
@@ -180,8 +177,8 @@ var AuthController = {
     * @param {Object} req
     * @param {Object} res
     */
-    callback: function (req, res) {
-        function tryAgain (err) {
+    callback: function(req, res) {
+        function tryAgain(err) {
 
             // Only certain error messages are returned via req.flash('error', someError)
             // because we shouldn't expose internal authorization errors to the user.
@@ -190,7 +187,7 @@ var AuthController = {
 
             sails.log(flashError);
 
-            if (err && !flashError ) {
+            if (err && !flashError) {
                 req.flash('error', 'Error.Passport.Generic');
             } else if (flashError) {
                 req.flash('error', flashError);
@@ -222,12 +219,12 @@ var AuthController = {
             }
         }
 
-        passport.callback(req, res, function (err, user, challenges, statuses) {
+        passport.callback(req, res, function(err, user, challenges, statuses) {
             if (err || !user) {
                 return tryAgain(challenges);
             }
 
-            req.login(user, function (err) {
+            req.login(user, function(err) {
                 if (err) {
                     return tryAgain(err);
                 }
@@ -237,8 +234,7 @@ var AuthController = {
 
                 if (req.param('device')) {
                     res.ok(user);
-                }
-                else {
+                } else {
                     // Upon successful login, send the user to the homepage were req.user
                     // will be available.
                     res.redirect('/');
@@ -253,7 +249,7 @@ var AuthController = {
     * @param {Object} req
     * @param {Object} res
     */
-    disconnect: function (req, res) {
+    disconnect: function(req, res) {
         passport.disconnect(req, res);
     },
 };
