@@ -85,6 +85,7 @@ module.exports = {
                     .find({
                         id: matches,
                     })
+                    .populate('thumbnail')
                     .then(function (recipes) {
                         return cb(null, recipes);
                     })
@@ -96,7 +97,7 @@ module.exports = {
 
                 matches.forEach(function (id, idx) {
                     id = parseInt(id);
-                    
+
                     for ( var idx2 in recipes ) {
                         var recipe = recipes[idx2];
 
