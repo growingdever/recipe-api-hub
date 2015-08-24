@@ -45,11 +45,6 @@ module.exports = {
 
 			var query = Recipe.find(criteria);
 
-			if (criteria.where.feelings) {
-				query.groupBy(feelings);
-				delete criteria.where.feelings;
-			}
-
 			query
 			.populate('thumbnail')
 			.populate('feelings')
