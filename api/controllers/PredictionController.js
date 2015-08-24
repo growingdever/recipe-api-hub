@@ -78,7 +78,35 @@ module.exports = {
             async.waterfall([
                 bringRecipes,
                 sortRecipes,
+                wasLikedRecipe,
             ], done);
+
+            function wasLikedRecipe(recipes, cb) {
+    			if (!req.user) {
+    				return cb(null, recipes);
+    			}
+
+    			async.forEachOf(recipes, function(recipe, index, cb) {
+    				Like
+    				.findOne({
+    					user: req.user.id,
+    					recipe: recipe.id,
+    				})
+    				.then(function(like) {
+    					if (like) {
+    						recipes[index].wasLiked = like.id;
+    					}
+
+    					return cb();
+    				})
+    				.catch(function(error) {
+    					return cb(error);
+    				});
+
+    			}, function(error) {
+    				return cb(error, recipes);
+    			});
+            }
 
             function bringRecipes(cb) {
                 Recipe
