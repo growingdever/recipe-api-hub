@@ -36,6 +36,7 @@ module.exports.routes = {
     view: 'homepage'
   },
 
+  ////////
   'get /login': 'AuthController.login',
   'get /logout': 'AuthController.logout',
   'get /register': 'AuthController.register',
@@ -48,16 +49,33 @@ module.exports.routes = {
   'get /auth/:provider/callback': 'AuthController.callback',
   'get /auth/:provider/:action': 'AuthController.callback',
 
+  ///
+  /// Like
+  ///
   'post /recipes/:id/likes': 'LikeController.create',
   'delete /recipes/:id/likes': 'LikeController.destroy',
 
+  ///
+  /// View
+  ///
   'post /recipes/:id/views': 'ViewController.create',
   'delete /recipes/:id/views': 'ViewController.destroy',
 
+  ///
+  /// Review
+  ///
   'get /recipes/:id/reviews': 'RecipeController.findReviews',
 
+  ///
+  /// Feeling
+  ///
   'post /feelings/:id/recipes/:recipe': 'FeelingController.addRecipe',
   'delete /feelings/:id/recipes/:recipe': 'FeelingController.removeRecipe',
+
+  ///
+  /// Prediction
+  ///
+  'get /predictions': 'PredictionController.find',
 
   /***************************************************************************
   *                                                                          *

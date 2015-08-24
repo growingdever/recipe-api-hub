@@ -43,9 +43,9 @@ module.exports = {
 				delete criteria.where;
 			}
 
-			var query = Recipe
-			.find(criteria)
-			.populate('thumbnail')
+			var query = Recipe.find(criteria);
+
+			query.populate('thumbnail')
 			.populate('feelings')
 			.then(function(recipes) {
 				return cb(null, recipes);

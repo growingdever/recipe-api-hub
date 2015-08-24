@@ -3,9 +3,11 @@
 
 ## 배포된 서버
 클릭하면 해당 링크로 이동합니다.
+
 - <a href="https://recipe-main.herokuapp.com" target="_blank">Heroku</a>
 
 **읽기 전에**
+
 1. 본문 특히 코드 블럭에서 '**/**'로 시작하는 문자열들은 대부분 URL을 의미합니다. (예를 들어`/register`는 다음과 같습니다. `http://recipe-main.herokuapp.com/register` 또는 `http://localhost:1337/register`)
 2. 이 문서에서 뭔가 잘못된 점을 발견하셨다면, _이미 알고 있다_는 뜻이니 알아서 수정하세요.
 
@@ -34,12 +36,6 @@ module.exports = {
       pool: false,
     },
   },
-
-  session: {
-    secret: 'forget my past',
-    adapter: 'blahblah',
-    url: 'something',
-  }
 };
 ```
 
@@ -52,24 +48,21 @@ npm start
 
 ## API 라우트 주소
 
-```sh
-# View list
-/register # 웹에서 가입
-/login    # 웹에서 로그인
+### Authentication
 
-/auth/local/register # API 형태 가입
+#### Sign up
+`/auth/local/register`
 
-# RESTful API list
-# RESTful API URL type: /{API version}/{collection name}/{id}
-/v1/users
-/v1/likes
-/v1/views
-/v1/recipes
-/v1/feels
+Parameters: nickname, email, password, device
 
-# Additional API
-/auth/getAccessToken  # 자세한 설명은 생략한다
-```
+#### Get Access Token
+`/auth/local/getAccessToken`
+
+Parameters: identifier, password
+
+#### Get User Information
+* `/auth/me`: 인증한 유저의 정보
+* `/users/:id`: 타 유저의 정보
 
 ### Handle Auth API BadRequest
 Auth API는 기본적으로 작업에 실패하면 다른 웹페이지로 리다이렉트합니다. 만약 당신이 외부 기기에서 요청해서 리다이렉트 대신 정확한 에러 메세지를 받고 싶다면 파라메터에 device를 추가하고 기기의 이름을 넣어주세요. (예: device=android)
@@ -237,36 +230,3 @@ Unauthorized
 
 ## Blueprint(RESTful API)
 특정 모델에 대한 추가(Create), 조회(Find), 수정(Update), 삭제(Destroy)를 정해진 URL 형식으로 수행할 수 있습니다. 이 프로젝트는 Sails의 Blueprint 기능을 기반으로 동작합니다. [원문](http://sailsjs.org/documentation/reference/blueprint-api)을 참조하면 더 자세한 내용을 읽을 수 있습니다.
-
-```
-# 앞에 있는 POST, GET, PUT, DELETE는 Request Method를 의미합니다.
-# 새 리뷰 등록
-POST '/reviews' {title: '리뷰 제목', 'content': '리뷰 내용 블라블라 썸띵 에라 모르겠다 냅다 컨닝', recipe: 123, ...}
-
-# 리뷰 조회
-GET '/reviews' # 최근 등록된 리뷰 30개를 가져옵니다. (모든 API에 대해서 기본 30개)
-GET '/reviews?limit=40' # 최근 등록된 40개 가져옵니다.
-GET '/reviews?skip=10' # 최근 10개를 스킵해서 가져옵니다.
-GET '/reviews?sort=createdAt DESC' # 생성 날짜 기준 내림차순으로 정렬합니다. '필드 이름 <ASC | DESC>' 식으로 사용할 수 있다.
-GET '/reviews?where={"content":{"contains":"짱짱"}}' # '짱짱' 이란 내용이 'content'필드에 있는 항목들만 가져옵니다.
-GET '/reviews/3' # id가 3인 리뷰를 가져옵니다.
-
-# 리뷰 수정
-PUT '/reviews/3' # id가 3인 리뷰를 수정합니다.
-
-# 리뷰 삭제
-DELETE '/reviews/3' # id가 3인 리뷰를 삭제합니다.
-```
-
-### User Model
-#### update
-유저 정보를 수정하기 위해서는
-
-## ML API
-머신러닝 API 입니다. 미구현상태입니다. 다음과 같은 형식으로 지원할 예정입니다.
-
-```
-/ml/recommendation/recipes  # 사용자한테 추천할 레시피 N개 리턴
-/ml/similar/recipes         # 해당 레시피와 비슷한 레시피 N개
-/ml/rank/recipes            # 레시피 N개 중 특정 사용자에게 맞춘 우선순위
-```
