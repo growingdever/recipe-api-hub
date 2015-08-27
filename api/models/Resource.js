@@ -37,7 +37,6 @@ module.exports = {
 
             delete object.createdAt;
             delete object.updatedAt;
-            delete object.id;
 
             return object;
         }

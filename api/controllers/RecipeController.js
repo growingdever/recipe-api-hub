@@ -30,7 +30,7 @@ function find(req, res) {
 	async.waterfall([
 		findRecipes,
 		matchLikes,
-	], serviceUtil.reponse(req, res));
+	], serviceUtil.response(req, res));
 
 	// 레시피 조회
 	function findRecipes(cb) {

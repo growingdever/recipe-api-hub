@@ -11,14 +11,15 @@ module.exports = {
 };
 
 function addRecipe(req, res) {
+    var feelingId = req.param('id');
+    var recipeId = req.param('recipe');
+
     async.waterfall([
         insertFeeling,
     ], serviceUtil.response(req, res));
 
-    var feelingId = req.param('id');
-    var recipeId = req.param('recipe');
-
     function insertFeeling(cb) {
+        sails.log("feelingId: " + feelingId);
         Feeling
             .findOne({
                 id: feelingId,
@@ -36,12 +37,12 @@ function addRecipe(req, res) {
 }
 
 function removeRecipe(req, res) {
+    var feelingId = req.param('id');
+    var recipeId = req.param('recipe');
+
     async.waterfall([
         detachFeeling,
     ], serviceUtil.response(req, res));
-
-    var feelingId = req.param('id');
-    var recipeId = req.param('recipe');
 
     function deatchFeeling(cb) {
         Feeling

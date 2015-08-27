@@ -82,7 +82,7 @@ var User = {
                 profile: object.profile,
                 nickname: object.nickname,
             };
-            
+
             return contains;
         },
     },
@@ -103,20 +103,6 @@ var User = {
 
     findOneByCredential: function (identifier, password, next) {
         async.waterfall([
-            function findUser(cb) {
-                User
-                .findOneByIdentifier(identifier)
-                .then(function (user) {
-                    if (!user) {
-                        return cb(isEmail ? 'Error.User.Email.NotFound' : 'Error.User.ID.NotFound');
-                    }
-
-                    cb(null, user);
-                })
-                .catch(function (error) {
-                    cb(error);
-                });
-            },
 
             function validPassword(user, cb) {
                 Passport
@@ -160,10 +146,15 @@ var User = {
                 .then(function (res) {
                     cb();
                 })
-                .catch(cb);
+                .catch(function (error) {
+                    sails.log("PredictionIO Error: " + error);
+                    return cb();
+                });
             },
 
-        ], cb);
+        ], function (error, result) {
+            return cb(error);
+        });
     },
 
     beforeDestroy: function (criteria, cb) {
