@@ -4,8 +4,8 @@ var pioApps = {
     myRecipe: {
         eventURL: 'http://49.142.11.147:8001',
         queryURL: 'http://49.142.11.147:8000',
-        appId: 2,
-        accessKey: '509yti9EXlgJOwAItd3enOeEWiHWNfdSilmck140y6tOkBGPImQuByFlpNwSBOdS',
+        appId: 3,
+        accessKey: 'TqVUs1fgMlsPFB4uv0zO9xBgfwfBeLdCIKaLkb8OIsJ5qu0MbGrZA2H0XD9JAvT9',
     },
 };
 
