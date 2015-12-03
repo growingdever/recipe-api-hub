@@ -2,7 +2,7 @@ var PredictionIO = require('predictionio-driver');
 
 var pioApps = {
     myRecipe: {
-        eventURL: 'http://49.142.11.147:8001',
+        eventURL: 'http://49.142.11.147:7070',
         queryURL: 'http://49.142.11.147:8000',
         appId: 3,
         accessKey: 'TqVUs1fgMlsPFB4uv0zO9xBgfwfBeLdCIKaLkb8OIsJ5qu0MbGrZA2H0XD9JAvT9',
