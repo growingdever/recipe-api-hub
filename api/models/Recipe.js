@@ -39,6 +39,30 @@ module.exports = {
             defaultsTo: 0,
         },
 
+        // 영양분 - 탄수화물
+        nutriment_carbohydrate: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+
+        // 영양분 - 단백질
+        nutriment_protein: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+
+        // 영양분 - 지방
+        nutriment_fat: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+
+        // 영양분 - 나트륨(소듐)
+        nutriment_sodium: {
+            type: 'integer',
+            defaultsTo: 0,
+        },
+
         // 보관온도
         temperature: {
             type: 'string',
